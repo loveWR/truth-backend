@@ -1,0 +1,68 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+	 <table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+								<tr>
+									<td  class="title" width="20%" nowrap="nowrap">定时任务
+									</td>
+									<td  class="field" width="80%">
+					            			{$task}
+									</td>
+								</tr>
+								<tr>
+									<td  class="title" >开启时间
+									</td>
+									<td  class="field" >
+										{$data.start_time}
+										
+									</td>
+								</tr>
+								<tr>
+									<td  class="title"  nowrap="nowrap">执行间隔(秒)
+									</td>
+									<td  class="field">
+									{$data.intervaltimes}
+					            			
+									</td>
+								</tr>
+								<tr>
+									<td  class="title"   nowrap="nowrap">是否启动任务
+									</td>
+									<td  class="field">
+									{$data.isrun?"是":"否"}
+										
+									</td>
+								</tr>
+								<tr>
+									<td  class="title"   nowrap="nowrap">执行次数
+									</td>
+									<td  class="field">
+									{$data.times}
+										
+									</td>
+								</tr>
+								<tr>
+									<td  class="title" >结束时间
+									</td>
+									<td  class="field" >
+									{$data.end_time}
+										
+									</td>
+								</tr>
+								<tr>
+									<td  class="title"   nowrap="nowrap">备注
+									</td>
+									<td  class="field">
+									{$data.remark}
+										
+									</td>
+								</tr>
+
+						</table>
+
+				 
+{/block}

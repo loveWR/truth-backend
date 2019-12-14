@@ -1,0 +1,94 @@
+<?php
+// 查看弹窗页面继承此页。无tokenGUID
+ 
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>{block name="title"}{/block}</title>
+    <meta name="description" content="Xframework" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/font-awesome/css/font-awesome.css" />
+    <!-- page specific plugin styles -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/_mod/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/_mod/jqgrid/ui.jqgrid.css" />
+    <!-- text fonts -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-fonts.css" />
+    <!-- ace styles -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/dist/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-part2.css" class="ace-main-stylesheet" />
+    <![endif]-->
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-skins.css" />
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-ie.css" />
+    <![endif]-->
+    <!--[if !IE]> -->
+    <script src="__ADMIN__/ACE/components/jquery/dist/jquery.min.js"></script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script src="__ADMIN__/ACE/components/jquery.1x/dist/jquery.min.js"></script>
+    <![endif]-->
+    <!-- ace settings handler -->
+    <script src="__ADMIN__/ACE/assets/js/ace-extra.js"></script>
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+    <!--[if lte IE 8]>
+    <script src="__ADMIN__/ACE/components/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="__ADMIN__/ACE/components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+    
+    <!-- 弹窗日期选择 -->
+    <script src="__ADMIN__/js/layer/layer.js"></script>
+    <script src="__ADMIN__/js/layer/laydate/laydate.js"></script>
+    <!-- 自定义页面样式与JS -->
+    <link  href="__ADMIN__/css/base.css__JSVER__" rel="stylesheet" />
+    <script src="__ADMIN__/js/tools.js__JSVER__"></script>
+      
+   
+
+    {block name="header"}
+    {/block}
+   
+</head>
+
+<body class="no-skin">
+<!-- /.main-container start  ace-save-state-->
+<div class="main-container " id="main-container">
+    <!-- /.main-content start -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                            {block name="main_content"}  {/block}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.main-content end -->
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse" title="回顶部">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+<!-- /.main-container end-->
+<!-- basic scripts -->
+<script src="__ADMIN__/ACE/components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- page specific plugin scripts -->
+<script src="__ADMIN__/ACE/components/jqGrid/js/jquery.jqGrid.min.js"></script>
+<script src="__ADMIN__/ACE/components/jqGrid/js/i18n/grid.locale-cn.js"></script>
+<!-- ace scripts -->
+<script src="__ADMIN__/ACE/assets/js/src/elements.scroller.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.typeahead.js"></script>
+<script src="__ADMIN__/ACE/dist/js/ace.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.basics.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.scrolltop.js"></script>
+
+<!--子页面附加脚本-->
+{block name="footer"}    {/block}
+</body>
+</html>

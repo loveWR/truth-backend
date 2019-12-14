@@ -1,0 +1,948 @@
+﻿{extend name="application/common/view/list.html" /} {block name="header"}
+<link href="__ADMIN__/js/attfile/css/attFileList.css" rel="stylesheet" />
+<link href="__ADMIN__/ACE/components/jquery-colorbox/colorbox.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="__ADMIN__/js/cropper/cropper.css" />
+<link rel="stylesheet" type="text/css" href="__ADMIN__/ACE/components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" />
+<link rel="stylesheet" type="text/css" href="__ADMIN__/js/powerFloat/jquery.powerFloat.css" />
+<script src="__ADMIN__/js/jQueryRotate.js"></script>
+<script src="__ADMIN__/ACE/components/jquery-ui/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__ADMIN__/ACE/components/jquery-colorbox/jquery.colorbox.js"></script>
+<script src="__ADMIN__/js/attfile/imageList.js"></script>
+<script type="text/javascript" src="__ADMIN__/js/webuploader/webuploader.js"></script>
+<script src="__ADMIN__/js/attfile/attFileList.js"></script>
+<script src="__ADMIN__/js/cropper/cropper.js"></script>
+<script src="__ADMIN__/js/cropper/main.js"></script>
+<script src="__ADMIN__/js/layer/laydate/laydate.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.typeahead.js"></script>
+<script src="__ADMIN__/ACE/components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+	.mainwwap {
+		margin-bottom: 30px;
+	}
+	
+	.elementwrap {
+		margin: 5px 0;
+	}
+</style>
+{/block} {block name="main_content"}
+
+<!--页面最外层容器开始-->
+<div class="col-xs-12 mainwwap">
+	<p>弹窗选择开始</p>
+	<p><</p>
+	<div class="elementwrap">
+		<div class="col-xs-12">
+			<h2>Welcome</h2>
+			<div class="form-group">
+				<div class="input-group">
+					<input type="hidden" name="userid" id="userid" />
+					<input type="text" name="userid_show" id="userid_show" class="form-control search-query admin_sea" value="" placeholder="通用表格单选" ally="#userid"/>
+
+					<span class="input-group-addon addon-btn no-left-border" id="userid_selectBtn" onclick="dataDlgTable('selectrole', 'userid_selectBtn', public_DlgCallBack );" data-dlgreturn="userid_show.val()=rolename;userid.val()=id" data-dlgcallback="">
+                        <i class="ace-icon fa fa-check"></i>
+                    </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#userid,#userid_show');">
+                        <i class="ace-icon fa fa-close"></i>
+                    </span>
+				</div>
+			</div>
+			<div class="form-group">
+
+				<div class="input-group">
+					<input type="hidden" name="userid2" id="userid2" />
+					<input type="text" name="userid2_show" id="userid2_show" class="form-control search-query admin_sea" value="" placeholder="通用表格多选" ally="#userid2"/>
+
+					<span class="input-group-addon addon-btn no-left-border" id="userid2_selectBtn" onclick="dataDlgTable('selectroles', 'userid2_selectBtn', public_DlgCallBack);" data-dlgreturn="userid2_show.val()=rolename;userid2.val()=id" data-dlgcallback="">
+                    <i class="ace-icon fa fa-check"></i>
+                </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#userid2,#userid2_show');">
+                    <i class="ace-icon fa fa-close"></i>
+                </span>
+				</div>
+			</div>
+			<div class="form-group">
+
+				<div class="input-group">
+					<input type="hidden" name="deptid0" id="deptid0" />
+					<input type="text" name="deptid_show0" id="deptid_show0" class="form-control search-query admin_sea" value="" placeholder="通用树形单选" ally="#deptid0"/>
+
+					<span class="input-group-addon addon-btn no-left-border" id="deptid_selectBtn0" onclick="dataDlgTree('selectdept', 'deptid_selectBtn0', public_DlgCallBack);" data-dlgreturn="deptid_show0.val()=deptname;deptid0.val()=id" data-dlgcallback="">
+                    <i class="ace-icon fa fa-check"></i>
+                </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#deptid0,#deptid_show0');">
+                    <i class="ace-icon fa fa-close"></i>
+                </span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="input-group">
+					<input type="hidden" name="deptid2" id="deptid2" />
+					<input type="text" name="deptid2_show" id="deptid2_show" class="form-control search-query admin_sea" value="" placeholder="通用树形多选" ally="#deptid2"/>
+
+					<span class="input-group-addon addon-btn no-left-border" id="deptid2_selectBtn" onclick="dataDlgTree('selectdepts', 'deptid2_selectBtn', public_DlgCallBack);" data-dlgreturn="deptid2_show.val()=deptname;deptid2.val()=id" data-dlgcallback="">
+                    <i class="ace-icon fa fa-check"></i>
+                </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#deptid2,#deptid2_show');">
+                    <i class="ace-icon fa fa-close"></i>
+                </span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="pull-left lablelforinput" for="deptid_shows">Label name</label>
+
+				<div class="input-group">
+					<input type="hidden" name="codeid" id="codeid" />
+					<input type="text" name="codeid_show" id="codeid_show" class="form-control search-query admin_sea" value="" placeholder="专用表格选代码，可指定单/多选"  ally="#codeid"/>
+
+					<span class="input-group-addon addon-btn no-left-border" id="codeid_selectBtn" onclick="dlgSelectCode('NATION',true, 'codeid_selectBtn', public_DlgCallBack);" data-dlgreturn="codeid_show.val()=codename;codeid.val()=id" data-dlgcallback="">
+                        <i class="ace-icon fa fa-check"></i>
+                    </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#codeid,#codeid_show');">
+                        <i class="ace-icon fa fa-close"></i>
+                    </span>
+				</div>
+			</div>
+			<div class="form-group">
+				根据类型选择代码（tree)异步加载 (集成typeahead 自动完成功能)
+				<div class="input-group">
+					<input type="hidden" name="codeid2" id="codeid2" />
+				 
+					<input type="text" name="codeid2_show" id="codeid2_show" class="typeahead form-control search-query admin_sea" ally='#codeid2' value="" placeholder="专用树形选代码，异步加载" data-typeahead='{"url":"/admin/demo/getTypeahead","keyfield":"id","valuefield":"codename","returnid":"codeid2"}' />
+					<span class="input-group-addon addon-btn no-left-border" id="codeid2_selectBtn" onclick="dlgSelectCodeTree('CASETYPE',true, true,'codeid2_selectBtn', public_DlgCallBack);" data-dlgreturn="codeid2_show.val()=codename;codeid2.val()=id" data-dlgcallback="">
+                        <i class="ace-icon fa fa-check"></i>
+                    </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#codeid2,#codeid2_show');">
+                        <i class="ace-icon fa fa-close"></i>
+                    </span>
+
+					<!--  
+       	typeahead 预载入输入 调用下面代码
+       <script src="__ADMIN__/ACE/assets/js/src/elements.typeahead.js"></script>
+       要让某个input 可以typeahead,只要加上class=typeahead,并设置data-typeahead（单引号引起来的一个JSON对象）,即会自动绑定。
+       class="typeahead "  data-typeahead='{"url":"/admin/demo/getTypeahead","keyfield":"id","valuefield":"codename","returnid":"codeid2"}'	
+        其中url  后台提供数据的URL 通常是返回两个字段记录集的查询
+          keyfield 数据集中代表ID的 字段名
+          valuefield  数据库代表 显示内容的字段名 
+          returnid 指定选择的ID填写到哪里， 通常是一个DOM的ID 如： "codeid2"    
+          实现 代码在 tools.js 
+       -->
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				根据类型选择代码（tree)
+				<div class="input-group">
+					<input type="hidden" name="codeid21" id="codeid21" />
+					<input type="text" name="codeid21_show" id="codeid21_show" class="form-control search-query admin_sea" value="" placeholder="专用树形选代码，可指定单/多选，可搜索再选" ally="#codeid21"/>
+					<span class="input-group-addon addon-btn no-left-border" id="codeid21_selectBtn" onclick="dlgSelectCodeTree('CASETYPE',true, false,'codeid21_selectBtn', public_DlgCallBack);" data-dlgreturn="codeid21_show.val()=codename;codeid21.val()=id" data-dlgcallback="">
+                        <i class="ace-icon fa fa-check"></i>
+                    </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#codeid21,#codeid21_show');">
+                        <i class="ace-icon fa fa-close"></i>
+                    </span>
+				</div>
+			</div>
+
+			<div class="form-group">
+
+				<div class="input-group">
+					<input type="hidden" id="userid3" />
+					<input type="text" id="userid3_show" class="form-control search-query admin_sea" value="" placeholder="专用选择用户" ally="#userid3"/>
+
+					<span class="input-group-addon addon-btn no-left-border" id="userid3_selectBtn" onclick="dlgSelectUser(true, 'userid3_selectBtn', public_DlgCallBack);" data-dlgreturn="userid3_show.val()=realname;userid3.val()=id" data-dlgcallback="">
+                        <i class="ace-icon fa fa-check"></i>
+                    </span>
+					<span class="input-group-addon addon-btn" onclick="clearValue('#userid3,#userid3_show');">
+                        <i class="ace-icon fa fa-close"></i>
+                    </span>
+					 
+				</div>
+
+			</div>
+			<div class="form-group">
+
+			</div>
+
+			<!-- PAGE CONTENT ENDS  -->
+		</div>
+	</div>
+	<p>弹窗选择结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>再次确认框开始</p>
+	<div class="elementwrap">
+		<button class="btn btn-error btnConform">错误</button>
+	</div>
+	<script type="text/javascript">
+		$(".btnConform").on("click", function() {
+			$.modalConfirm("确定删除吗", function() {
+				console.log(1111111111)
+			});
+			return false;
+		})
+	</script>
+	<p>再次确认框结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>消息框开始</p>
+	<div class="elementwrap">
+		<button class="btn btn-error bthErrors">错误</button>
+		<button class="btn btn-success bthSuccesss">成功</button>
+		<button class="btn btn-warning bthWarrings">警告</button>
+		<button class="btn btn-info btnUnlogins">未登录</button>
+		<button class="btn btn-info btnDefaults">默认</button>
+		
+
+	</div>
+	<script type="text/javascript">
+		$(".bthErrors").on("click", function() {
+			$.modalMsg("修改错误", "error");
+			return false;
+		})
+		$(".bthSuccesss").on("click", function() {
+			$.modalMsg("保存成功", "success");
+			return false;
+		})
+		$(".bthWarrings").on("click", function() {
+			$.modalMsg("确定要删除吗", "warning");
+			return false;
+		})
+		$(".btnUnlogins").on("click", function() {
+			$.modalMsg("未登录", "unlogin");
+			return false;
+		})
+		$(".btnDefaults").on("click", function() {
+			$.modalMsg("默认", "");
+			return false;
+		})
+		
+	</script>
+	<p>消息框结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>弹出窗效果开始</p>
+	<div class="elementwrap">
+		<button class="btn btn-error bthError">错误</button>
+		<button class="btn btn-success bthSuccess">成功</button>
+		<button class="btn btn-warning bthWarring">警告</button>
+		<button class="btn btn-info btnUnlogin">未登录</button>
+		<button class="btn btn-info btnDefault">默认</button>
+<button class="btn btn-info btnPrompt">prompt输入框 </button>
+	</div>
+
+	<script type="text/javascript">
+		$(".bthError").on("click", function() {
+			$.modalAlert("修改错误", "error");
+			return false;
+		})
+		$(".bthSuccess").on("click", function() {
+			$.modalAlert("保存成功", "success");
+			return false;
+		})
+		$(".bthWarring").on("click", function() {
+			$.modalAlert("确定要删除吗", "warning");
+			return false;
+		})
+		$(".btnUnlogin").on("click", function() {
+			$.modalAlert("未登录", "unlogin");
+			return false;
+		})
+		$(".btnDefault").on("click", function() {
+			$.modalAlert("默认", "");
+			return false;
+		})
+		$(".btnPrompt").on("click", function() {
+			$.modalPrompt({title:'请输入审核意见',callBack:promptcb});
+			return false;
+		})
+        function promptcb(text)
+        {
+        	alert(text);
+        }
+
+	</script>
+	<p>弹出窗效果结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>多选框开始</p>
+	<div class="elementwrap">
+		<div class="form-group">
+			多选框
+			<label>
+			<input name="form-field-checkbox" type="checkbox" class="ace">
+			<span class="lbl"> choice 1</span>
+			</label>
+			<label>
+			<input name="form-field-checkbox" type="checkbox" class="ace">
+			<span class="lbl"> choice 1</span>
+			</label>
+			<label>
+			<input name="form-field-checkbox" type="checkbox" class="ace">
+			<span class="lbl"> choice 1</span>
+			</label>
+			<label>
+			<input name="form-field-checkbox" type="checkbox" class="ace">
+			<span class="lbl"> choice 1</span>
+			</label>
+			<label>
+			<input name="form-field-checkbox" type="checkbox" class="ace">
+			<span class="lbl"> choice 1</span>
+			</label>
+		</div>
+	</div>
+	<p>多选框结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>单选框开始</p>
+	<div class="elementwrap">
+		<div class="form-group">
+			单选框
+			<label>
+			<input name="form-field-radio" type="radio" class="ace">
+			<span class="lbl"> radio option 2</span>
+			</label>
+			<label>
+			<input name="form-field-radio" type="radio" class="ace">
+			<span class="lbl"> radio option 2</span>
+			</label>
+			<label>
+			<input name="form-field-radio" type="radio" class="ace">
+			<span class="lbl"> radio option 2</span>
+			</label>
+			<label>
+			<input name="form-field-radio" type="radio" class="ace">
+			<span class="lbl"> radio option 2</span>
+			</label>
+		</div>
+
+	</div>
+
+	<p>单选框结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>按钮样式开始</p>
+	<div class="elementwrap">
+		<div class="buttonArea">
+			<button class="fa fa-plus-square fa-lg btn btn-primary" id="btnAdd" onclick="return false;">新增</button>
+			<button class="fa fa-edit fa-lg btn  btn-info" id="btnEdit" onclick="return false;">修改</button>
+			<button class="fa fa-trash-o fa-lg btn btn-danger" id="btnDelete" onclick="return false;">删除</button>
+			<button class="fa fa-file-text-o fa-lg btn  btn-success" id="btnRead" onclick="return false;">查看</button>
+			<div class="btn-group">
+				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle fa fa-th" aria-expanded="false">
+                        批量操作
+                        <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                    </button>
+				<ul class="dropdown-menu dropdown-primary ">
+
+					{if haveAction('admin/roles/permission_user')}
+					<li>
+						<a href="#" id="expSelect" onclick="return false;">导出选择</a>
+					</li>
+					{/if} {if haveAction('admin/roles/permission_action')}
+					<li>
+						<a href="#" id="expAll" onclick="return false;">导出全部</a>
+					</li>
+					{/if}
+				</ul>
+			</div>
+
+			<button class="fa fa-check-square-o fa-lg btn btn-primary" id="btnReload" onclick="return false;">审核</button>
+			<button class="fa fa-folder-open   fa-lg btn btn-grey" id="btnOpenClose" onclick="return false;">全部展开</button>
+			<button class="fa fa-check-square  fa-lg btn btn-grey" id="btnSelectAll" onclick="return false;">全选</button>
+
+			<button class="fa fa-check-square  fa-lg btn btn-grey" id="btnReload" onclick="return false;">授权</button>
+			<button class="fa fa-check-square  fa-lg btn btn-primary" id="btnReload" onclick="return false;">授权</button>
+			<button class="fa fa-user-plus   fa-lg btn btn-primary" id="btnReload" onclick="return false;">指派用户</button>
+			<button class="fa fa-user-times fa-lg btn btn-purple" id="btnReload" onclick="return false;">回收用户</button>
+			<button class="fa fa-undo   fa-lg btn btn-light" id="btnReload" onclick="return false;">反审核</button>
+			<button class="fa fa-comments fa-lg btn btn-primary" id="btnAdd" onclick="return false;">反馈</button>
+			<button class="fa fa-calendar-check-o fa-lg btn btn-primary" id="btnAdd" onclick="return false;">签收</button>
+			<button class="fa fa-cloud-upload fa-lg btn btn-primary" id="btnAdd" onclick="return false;">上传</button>
+			<button class="fa fa-download fa-lg btn btn-primary" id="btnAdd" onclick="return false;">下载</button>
+			<button class="fa fa-refresh fa-lg btn btn-yellow" id="btnReload" onclick="return false;">刷新</button>
+			<div>其中新增、修改、删除、查看、刷新。固定使用上面的图标和样式，其它功能按钮，根据需要增加，默认使用 btn-primary 颜色，图标根据需要配置 。</div>
+
+		</div>
+		<script type="text/javascript">
+			$("#btnOpenClose").click(function() {
+				if($(this).hasClass("fa-folder-open")) {
+					//openall();
+					$(this).removeClass("fa-folder-open").addClass("fa-folder");
+					$(this).text("全部折叠");
+					return false;
+				} else {
+					//	closeall();
+					$(this).addClass("fa-folder-open").removeClass("fa-folder");
+					$(this).text("全部展开");
+					return false;
+				}
+
+			});
+
+			$("#btnSelectAll").click(function() {
+				if($(this).hasClass("fa-check-square")) {
+					//selectall();
+					$(this).removeClass("fa-check-square").addClass("fa-square");
+					$(this).text("全不选");
+					return false;
+				} else {
+					//	closeall();
+					$(this).addClass("fa-check-square").removeClass("fa-square");
+					$(this).text("全选");
+					return false;
+				}
+
+			});
+		</script>
+
+	</div>
+
+	<p>按钮样式结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>日期时间选择器/日期选择器开始</p>
+	<!--
+		data-datetype属性包含 date,datetime,time
+		input必须包含datepicker类 代码根据datepicker类来绑定插件
+		span中的laydatebtn 来绑定触发插件  如果不包含则只有input获取焦点后触发 后面按钮不会触发
+	-->
+	<div class="elementwrap">
+		<div class="col-md-3">日期时间选择器
+			<div class="input-group ">
+				<input class="form-control  datepicker required" id="plantime" name="plantime" type="text" data-datetype='datetime'>
+				<span class="input-group-addon   laydatebtn"></span>
+			</div>
+		</div>
+		<div class="col-md-3">日期选择器
+			<div class="input-group ">
+				<input class="form-control  datepicker required" id="plantimes" name="plantimes" type="text" data-datetype='date'>
+				<span class="input-group-addon   laydatebtn"></span>
+			</div>
+		</div>
+
+		<div class="clearfix">
+
+		</div>
+
+	</div>
+
+	<p> </p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>时间选择器开始</p>
+	<div class="elementwrap">
+		<div class="col-md-3">
+			<div class="input-group ">
+				<input class="form-control  datepicker required" id="plantime1" name="plantime1" type="text" data-datetype='time'>
+				<span class="input-group-addon   laydatebtn"></span>
+			</div>
+		</div>
+		 
+		<div class="clearfix">
+
+		</div>
+
+	</div>
+
+	<p>时间选择器结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>上传附件开始</p>
+	<!-- 
+		需要引用
+		<script src="__ADMIN__/js/attfile/attFileList.js"></script>
+		<script src="__ADMIN__/ACE/components/jquery-ui/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+		文件
+		然后调用
+			function btnuploadcallback(data) {
+							$("#attfilelist").attFileList("append", data);  //调用附件方法 将上传的附件信息追加到#attfilelist下 
+			}
+	-->
+	<div class="elementwrap">
+		<div class="col-md-3">
+			<div class="input-group">
+				<input type="text" name="fileid" id="fileid" size="25" class="form-control search-query admin_sea" value="389,390,388" placeholder="上传文件" />
+				<span class="input-group-btn">
+					<button type="button" class="fa fa-cloud-upload fa-lg btn btn-primary btn-myset" id="btnupload" onclick="uploadFile('files',true, '10MB' ,0, '*',  btnuploadcallback);">上传附件
+				    </button>
+				</span>
+			</div>
+			<div id="attfilelist" class="">	</div>
+
+		</div>
+		 
+		
+		<script type="text/javascript">
+			function btnuploadcallback(data) {
+				$("#attfilelist").attFileList("append", data);
+			}
+			$("#attfilelist").attFileList({
+				mode: "edit",
+				inputId: "#fileid" //获取数据插入到的元素
+			}); //有参数则调用设置的参数
+			//$("#attfilelist").attFileList("update",json,mode);  调用update方法 json必选  mode可选  )
+			//$("#attfilelist").attFileList("append",json,mode); 调用append方法  json必选  mode可选
+		</script>
+
+	</div>
+
+	<p>上传附件结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>封面图片上传开始</p>
+	<!--
+    	调用<script type="text/javascript" src="__ADMIN__/js/webuploader/webuploader.js"></script>图片上传插件
+    	然后调用imagePicker('#filePicker1', '#img1', '#input1');方法 
+    	#filePicker1 为触发元素 #img1为图片容器 #input1为输入框
+    -->
+	<div class="elementwrap">
+		<div id="uploader-demo" class="uploader">
+			<img src="__ADMIN__/img/uploaddefault.png" alt="" id="img1" width="100" height="100" class="cp">
+			<div class="uploadInfo text-center">
+				上传成功
+			</div>
+			<!--用来存放item-->
+			<div id="filePicker1">选择图片</div>
+			<input type="" name="input1" id="input1" value="" class="cp" />
+		</div>
+		<script src="__ADMIN__/js/powerFloat/jquery.powerFloat.min.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			imagePicker('#filePicker1', '#img1', '#input1');
+			$(document).ready(function() {
+
+				$(".cp").powerFloat({
+					targetMode: "ajax",
+					target: function() {
+						return $(this).val();
+					},
+					position: "5-7"
+				});
+			});
+		</script>
+	</div>
+
+	<p>封面图片上传结束</p>
+</div>
+
+
+<div class="col-xs-12 mainwwap">
+	<p>imagepicker开始</p>
+	<!--
+    	作者：info@saipanan.com
+    	时间：2017-10-17
+    	描述：
+    -->
+	<div class="elementwrap">
+		<div id="uploader-demo" class="uploader">
+			<!--用来存放item-->
+			<div id="filePicker3">选择图片</div>
+			<input type="" name="input1" id="input3" value="" class="cp" />
+			<button src="" class="fa fa-cloud-upload fa-lg btn btn-primary btn-myset" alt="" id="img3" width="100" height="100">点击上传</button>
+			<button type="button" class="fa fa-crop fa-lg btn btn-primary btn-myset" id="btnupload3" onclick="imageCrop($('#input3').val(),300,300,imageCropcbs);">
+			 裁剪
+		    </button>
+
+		</div>
+		<script>
+			imagePicker('#filePicker3', '#img3', '#input3');
+
+			function imageCropcbs(data) {
+				$('#input3').val(data.data.url);
+			}
+		</script>
+
+	</div>
+
+	<p>imagepicker结束</p>
+</div>
+
+
+<div class="col-xs-12 mainwwap">
+	<p>filepicker开始</p>
+	<!--
+    	作者：info@saipanan.com
+    	时间：2017-10-17
+    	描述：
+    -->
+	<div class="elementwrap">
+		<div id="uploader-demo" class="uploader">
+			<!--用来存放item-->
+			<div id="filePicker4">选择图片</div>
+			<input type="" name="input4" id="input4" value="" />
+			<button   class="fa fa-cloud-upload fa-lg btn btn-primary btn-myset" alt="" id="img4" width="100" height="100">点击上传</button>
+		</div>
+		<script>
+		filePicker('#filePicker4', '#img4', '#input4','*');
+		</script>
+
+	</div>
+
+	<p>filepicker结束</p>
+</div>
+
+
+<div class="col-xs-12 mainwwap">
+	<p>颜色选择器开始</p>
+	<!--
+		调用
+		<script src="__ADMIN__/ACE/components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="__ADMIN__/ACE/components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" />
+
+		-->
+	<div class="elementwrap">
+		<div class="bootstrap-colorpicker">
+			<!-- #section:plugins/misc.colorpicker -->
+			<input id="colorpicker1" type="text" class="input-small colorpicker-element">
+			<!-- /section:plugins/misc.colorpicker -->
+		</div>
+		<script type="text/javascript">
+			$('#colorpicker1').colorpicker({
+				format: "hex"
+
+			});
+		</script>
+	</div>
+
+	<p>颜色选择器结束</p>
+</div>
+<div class="col-xs-12 mainwwap">
+	<p>颜色选择器2开始</p>
+	<!--
+		调用
+	<script src="__ADMIN__/ACE/assets/js/src/elements.colorpicker.js"></script>
+		-->
+	<div class="elementwrap">
+		<div class="colorchoose">
+
+			<label for="simple-colorpicker-1" class="pull-left">Custom Color Picker</label>
+			<input type="type" name="" id="" value="" class="colorval pull-left" />
+			<select id="simple-colorpicker-1">
+				<option value="#ac725e">#ac725e</option>
+				<option value="#d06b64">#d06b64</option>
+				<option value="#f83a22">#f83a22</option>
+				<option value="#fa573c">#fa573c</option>
+				<option value="#ff7537">#ff7537</option>
+				<option value="#ffad46">#ffad46</option>
+				<option value="#42d692">#42d692</option>
+				<option value="#16a765">#16a765</option>
+				<option value="#7bd148">#7bd148</option>
+				<option value="#b3dc6c">#b3dc6c</option>
+				<option value="#fbe983">#fbe983</option>
+				<option value="#fad165">#fad165</option>
+				<option value="#92e1c0">#92e1c0</option>
+				<option value="#9fe1e7">#9fe1e7</option>
+				<option value="#9fc6e7">#9fc6e7</option>
+				<option value="#4986e7">#4986e7</option>
+				<option value="#9a9cff">#9a9cff</option>
+				<option value="#b99aff">#b99aff</option>
+				<option value="#c2c2c2">#c2c2c2</option>
+				<option value="#cabdbf">#cabdbf</option>
+				<option value="#cca6ac">#cca6ac</option>
+				<option value="#f691b2">#f691b2</option>
+				<option value="#cd74e6">#cd74e6</option>
+				<option value="#a47ae2">#a47ae2</option>
+				<option value="#555">#555</option>
+			</select>
+			<div class="dropdown dropdown-colorpicker">
+				<a data-toggle="dropdown" class="dropdown-toggle" data-position="auto" aria-expanded="false"></a>
+				<ul class="dropdown-menu dropdown-caret">
+					<li>
+						<a class="colorpick-btn" style="background-color:#ac725e;" data-color="#ac725e"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#d06b64;" data-color="#d06b64"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#f83a22;" data-color="#f83a22"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#fa573c;" data-color="#fa573c"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#ff7537;" data-color="#ff7537"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#ffad46;" data-color="#ffad46"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#42d692;" data-color="#42d692"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn selected" style="background-color:#16a765;" data-color="#16a765"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#7bd148;" data-color="#7bd148"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#b3dc6c;" data-color="#b3dc6c"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#fbe983;" data-color="#fbe983"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#fad165;" data-color="#fad165"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#92e1c0;" data-color="#92e1c0"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#9fe1e7;" data-color="#9fe1e7"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#9fc6e7;" data-color="#9fc6e7"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#4986e7;" data-color="#4986e7"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#9a9cff;" data-color="#9a9cff"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#b99aff;" data-color="#b99aff"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#c2c2c2;" data-color="#c2c2c2"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#cabdbf;" data-color="#cabdbf"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#cca6ac;" data-color="#cca6ac"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#f691b2;" data-color="#f691b2"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#cd74e6;" data-color="#cd74e6"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#a47ae2;" data-color="#a47ae2"></a>
+					</li>
+					<li>
+						<a class="colorpick-btn" style="background-color:#555;" data-color="#555"></a>
+					</li>
+				</ul>
+			</div>
+			<script src="__ADMIN__/ACE/assets/js/src/elements.colorpicker.js"></script>
+			<script type="text/javascript">
+				$(function() {
+					$('#simple-colorpicker-1').siblings(".colorval").val($('#simple-colorpicker-1').val()) //获取默认选框值插入到class为colorval的input
+					$('#simple-colorpicker-1').ace_colorpicker(); //调用ace颜色选择器插件
+					$('#simple-colorpicker-1').on("change", function() {
+
+						$(this).siblings(".colorval").val($(this).val()); //选择颜色后会触发change事件 然后将选框值赋到class为colorval的input
+
+					})
+
+				})
+			</script>
+		</div>
+		<div class="clearfix">
+
+		</div>
+	</div>
+
+	<p>颜色选择器2结束</p>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+
+		<div class="clearfix"></div>
+		<!--内容页面开始
+			<link href="__ADMIN__/js/attfile/css/attFileList.css" rel="stylesheet" />
+			<link href="__ADMIN__/ACE/components/jquery-colorbox/colorbox.min.css" rel="stylesheet" />
+			<script src="__ADMIN__/js/jQueryRotate.js"></script>
+			<script src="__ADMIN__/ACE/components/jquery-ui/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+			<script src="__ADMIN__/ACE/components/jquery-colorbox/jquery.colorbox.js"></script>
+			<script src="__ADMIN__/js/attfile/imageList.js"></script>
+		-->
+
+		<div class="contentArea">
+			<form class="form-horizontal" role="form">
+				<div class="">
+
+					<div class="form-group">
+						<div class="col-md-2  text-right">
+							<label class="control-label">附件列表</label>
+						</div>
+						<div class="col-md-10">
+
+							<div class="col-sm-12">
+								<button type="button" class="fa fa-cloud-upload fa-lg btn btn-primary" id="btnAdd1" onclick="uploadImage('img',false,0 , 0,btnAdd1callback);">上传</button>
+								<div class="test" id="imagelist1">
+									<input type="hidden" name="" id="imagelist_input1" value="436,437,441,453" class="test1" />
+								</div>
+							</div>
+						</div>
+						<script>
+							function btnAdd1callback(data) {
+								// console.log(data);
+								$('#imagelist1').imageList("append", data);
+							}
+							
+
+
+
+							$(function() {
+									$('#imagelist1').imageList({
+																	"mode": "edit",
+																	"inputId": "#imagelist_input1"
+														});
+
+							})
+						</script>
+
+					</div>
+
+					<script>
+						function btnupload2callback(data) {
+							console.log(data);
+							// $("#attfilelist").attFileList();
+						}
+					</script>
+
+					<!-- /.col -->
+				</div>
+
+			</form>
+
+		</div>
+			<div class="contentArea">
+			<form class="form-horizontal" role="form">
+				<div class="">
+
+					<div class="form-group">
+						<div class="col-md-2  text-right">
+							<label class="control-label">附件列表</label>
+						</div>
+						<div class="col-md-10">
+
+							<div class="col-sm-12">
+								<button type="button" class="fa fa-cloud-upload fa-lg btn btn-primary" id="btnAdd2" onclick="uploadImage('img',false,0 , 0,btnAdd2callback);">上传</button>
+								<div class="test" id="imagelist2">
+									<input type="hidden" name="" id="imagelist_input2" value="" class="test1" />
+								</div>
+							</div>
+						</div>
+						<script>
+							function btnAdd2callback(data) {
+								// console.log(data);
+								$('#imagelist2').imageList("append", data);
+							}
+							
+
+
+
+							$(function() {
+									$('#imagelist2').imageList({
+																	"mode": "edit",
+																	"inputId": "#imagelist_input2"
+														});
+
+							})
+						</script>
+
+					</div>
+
+					<script>
+						function btnupload2callback(data) {
+							console.log(data);
+							// $("#attfilelist").attFileList();
+						}
+					</script>
+
+					<!-- /.col -->
+				</div>
+
+			</form>
+
+		</div>
+		<!--内容页面结束-->
+	</div>
+</div>
+<div class="col-xs-12">
+	<p>tab选项卡开始</p>
+	<div class="elementwrap">
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active">
+					<a data-toggle="tab" href="#baseinfo" aria-expanded="true">
+						<i class="green ace-icon fa fa-home bigger-120"></i> 基本信息
+					</a>
+				</li>
+
+				<li class="">
+					<a data-toggle="tab" href="#setting" aria-expanded="false">SEO优化设置</a>
+				</li>
+
+			</ul>
+
+			<div class="tab-content">
+				<div id="baseinfo" class="tab-pane fade active in">
+					<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					 
+						<tr>
+							<td class="title" width="20%" nowrap="nowrap">标题
+							</td>
+							<td class="field" width="80%">
+								<div class="input-group pull-left">
+									<input class=" required" id="infotitle" name="infotitle" type="text" />
+								</div>
+								<span class="helping"> </span>
+							</td>
+						</tr>
+					 
+					</table>
+				</div>
+				<div id="setting" class="tab-pane fade">
+					<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+						<tr>
+							<td class="title" width="20%" nowrap="nowrap">页面标题Title
+							</td>
+							<td class="field" width="80%">
+								<div class="input-group pull-left">
+									<input class="" id="pagetitle" name="pagetitle" type="text" />
+								</div>
+								<span class="helping"> </span>
+							</td>
+						</tr>
+						 
+
+					</table>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!--
+    	如果是编辑页面 则需要点击提交时将页面定位到第一个错误所在的tab 需要在提交函数里面增加如下代码
+    	 if (!$('#form1').valid()) {  //验证不通过时执行如下代码
+            $(".error").eq(0).parents(".tab-pane").addClass("active in").siblings().removeClass("active in");
+            $(".nav-tabs li").eq($(".error").eq(0).parents(".tab-pane").index()).addClass("active").siblings().removeClass("active");
+            try {
+                $(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+            } catch (e) {
+            }
+            return false;
+        }
+    -->
+	<p>tab选项卡结束</p>
+</div>
+<div class="col-xs-12">
+	<p>后台select生成方法开始</p>
+	{$rolesddl}
+	<br/>
+	<code>
+	initSelectByData($data,$namefield,$vfield,$txtfield,$selectVal=[],$defaultTxt='',$defaultVal='',$css='')</br>
+	$data为数据库获取的值，$namefield为select标签的id值和name值，$vfield为option的值在$data的字段，$txtfield为option的文本值在$data的字段，$selectVal为默认已选择的值，$defaultTxt为第一个option的文本内容</br>
+	
+		$roles=Db::name('roles')->order(" sortno asc ")->select(); 
+        $rolesddl=$this->initSelectByData($roles,'roleid','id','rolename',[],'全部角色');
+        $this->assign('rolesddl',$rolesddl);
+        return $this->fetch();
+	</code>
+	<p>后台select生成方法结束</p>
+</div>
+		<hr /> {/block}

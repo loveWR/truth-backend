@@ -1,0 +1,82 @@
+{extend name="./application/common/view/form.html" /}
+{block name="title"}{/block} 
+{block name="header"}
+
+{/block}
+{block name="main_content"}
+<table cellspacing='1' width='100%' border='0' align='center' class='form-table'> 
+	<tr>
+		<td class="title"	width="20%" nowrap="nowrap">项目名称
+		</td>
+		<td class="field" width="80%" colspan="0">
+			<div class="input-group pull-left">
+				<input class="  " id="project_name" name="project_name"  type="text" value=""/>
+			</div>
+			<span class="helping"> </span>
+
+		</td>
+	</tr>
+	<tr>
+		<td class="title"	width="20%" nowrap="nowrap">项目预定目标
+		</td>
+		<td class="field" width="80%" colspan="0">
+			<div class="input-group">
+				<input class="  " id="periodica_target" name="periodica_target"  type="text" value=""/>
+			</div>
+			<span class="helping"> </span>
+		</td>
+	</tr>
+	<tr>
+		<td class="title"	width="20%" nowrap="nowrap">预定项目结束日期
+		</td>
+		<td class="field" width="80%" colspan="0">
+			<div class="pull-left input_wrap">
+				<div class="input-group ">
+					<input class="form-control  datepicker  " id="end_time" name="end_time" type="text" data-datetype='datetime' >
+					<span class="input-group-addon   laydatebtn"></span>
+				</div>
+				<span class="helping"> </span>
+			</div>
+
+		</td>
+	</tr>
+	<tr>
+		<td class="title"	width="20%" nowrap="nowrap">项目当前进度
+		</td>
+		<td class="field" width="80%" colspan="0">
+			<div class="input-group pull-left">
+				<textarea name="" id="proceeding" name="proceeding" cols="30" rows="10"></textarea>
+				
+			</div>
+			<span class="helping"> </span>
+
+		</td>
+	</tr>
+
+</table>
+{/block}
+{block name="footer"}
+
+<script type="text/javascript">
+
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		$.ajaxSubmitForm({
+			url: "{:url('save')}",
+			param: postData,
+			success: function(data) {
+				if (cb) {
+					cb(data);
+				}
+			}
+		});
+	};
+</script>
+{/block}

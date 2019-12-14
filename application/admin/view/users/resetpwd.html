@@ -1,0 +1,65 @@
+{extend name="application/common/view/form.html" /}
+{block name="title"}重置密码{/block} 
+{block name="header"}
+{/block} 
+{block name="main_content"}
+  
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+						<td class="title">登录用户名</td>
+						<td class="field">
+							<label for="">{$loginid}</label>
+						</td>
+					</tr>			
+				 
+					<tr>
+						<td  class="title"   nowrap="nowrap">新密码
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class=" required" id="password" name="password" type="password" />
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>			
+					<tr>
+						<td  class="title"   nowrap="nowrap">重复新密码
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class=" required " id="password2" name="password2" type="password" equalTo="#password" />
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+					
+				</table>
+
+
+  
+{/block} {block name="footer"}
+
+<script type="text/javascript">
+	 
+	function submitForm(cb) {
+		if(!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch(e) {}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		//console.log(postData);
+		//return;
+		$.ajaxSubmitForm({
+			url: "{:url('resetpwd')}?id="+{:input('get.id')},
+			param: postData,
+			success: function(data) {
+				try{
+					cb(data);
+				}catch(e){}
+			}
+		});
+	};
+</script>
+{/block}

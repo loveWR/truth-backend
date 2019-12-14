@@ -1,0 +1,33 @@
+{extend name="./application/common/view/form.html" /}
+{block name="title"}{/block} 
+{block name="header"}
+
+{/block}
+{block name="main_content"}
+{createhtml}
+{/block}
+{block name="footer"}
+
+<script type="text/javascript">
+
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		$.ajaxSubmitForm({
+			url: "{:url('save')}",
+			param: postData,
+			success: function(data) {
+				if (cb) {
+					cb(data);
+				}
+			}
+		});
+	};
+</script>
+{/block}

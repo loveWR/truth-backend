@@ -1,0 +1,231 @@
+{extend name="application/common/view/dialog.html" /} {block name="header"} {/block} {block name="main_content"}
+<script src="__ADMIN__/ACE/components/jquery-ui/jquery-ui.min.js"></script>
+<div class="alert  alert-info">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="ace-icon fa fa-times"></i>
+    </button>
+    当前数据表：{$table};
+    模块：{$module};
+    控制器：{$controller}
+</div>
+<div class="buttonArea">
+	<label>
+        <input name="listtype" type="radio" class="ace" checked="checked" value="0">
+        <span class="lbl">单列</span>
+    </label>
+    <label>
+        <input name="listtype" type="radio" class="ace"  value="1">
+        <span class="lbl">双列</span>
+    </label>
+	<button class="fa fa-edit green larger fa-lg btn btn-info" id="btnIndex" type="button">创建列表页面</button> 
+	<button class="fa fa-edit green larger fa-lg btn btn-info" id="btnCreate" type="button">创建新增页面</button> 
+	<button class="fa fa-edit green larger fa-lg btn btn-info" id="btnEdit" type="button">创建编辑页面</button> 
+	<button class="fa fa-edit green larger fa-lg btn btn-info" id="btnRead" type="button">创建查看页面</button> 
+	<button class="fa fa-edit green larger fa-lg btn btn-info" id="btnControl" type="button">创建控制器</button> 
+	<button class="fa fa-undo   fa-lg btn btn-light" id="btnback" onclick="history.go(-1)">返回</button>
+</div>
+<div class="contentArea">
+	<table id="gridTable"></table>
+	
+</div>
+<div>
+	<textarea name="content" id="content" cols="100" rows="10"></textarea>
+</div>
+{/block} {block name="footer"}
+<script type="text/javascript">
+	var gridSelector = "#gridTable";
+	jQuery(function() {
+		var parent_column = $(gridSelector).closest('[class*="col-"]');
+		$(window).on('resize.jqGrid',
+			function() {
+				$(gridSelector).jqGrid('setGridWidth', parent_column.width());
+				$(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+			});
+
+		//resize on sidebar collapse/expand
+		$(document).on('settings.ace.jqGrid',
+			function(ev, event_name, collapsed) {
+				if(event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+					//setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+					setTimeout(function() {
+							$(gridSelector).jqGrid('setGridWidth', parent_column.width());
+							$(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+						},
+						20);
+				}
+			});
+
+		var postdata = $('.searchArea').formSerialize(); //收集搜索条件
+		var windowHeight = $(window).height();
+		var rowNum = windowHeight < 800 ? 10 : 20; // window区域大于800，则默认20行一页， 否则10行。
+		$(gridSelector)
+			.jqGrid({
+				// caption: "用户列表",
+				url: "{:url('info_json')}?table={$table}",
+				mtype: 'POST', //默认是GET
+				datatype: "json", //默认xml
+				height: 'auto', //表格高度
+				shrinkToFit: true, //true拉伸列宽自动填满表格宽度但会fixed有固定宽度 flase按照colmodel参数初始化表格宽度
+				autoScroll: true, //是否自动横向滚动条
+				postData: postdata, //   发送的搜索条件数据
+				cellEdit: true, //开启单元格编辑
+				cellsubmit: 'clientArray',  //以数组形式提交 不用配置editurl
+				colModel: [
+					//固定列需要从第一列开始 设置frozen:true,并且sortable:false
+					{label: '字段',name: 'field',index: 'field',}, 
+					{label: '字段类型',name: 'type',index: 'type',}, 
+					 
+					{label: '字段长度',name: 'size',index: 'size',},
+					{label: '字段注释',name: 'comment',index: 'comment',},
+					 
+					{label: '字段是否主键',name: 'key',index: 'key',formatter:function (val) {
+						return val=='PRI'?"yes":"";
+					}}, 
+					{label: '字段是否可空',name: 'null',index: 'null',formatter:function (val) {
+						return val=='NO'?"no":"yes";
+					}},
+					{label: '<span class="green">列表时是否可点击排序<span>',name: 'is_sortable',index: 'is_sortable',editable : true,edittype : "checkbox",editoptions : {value : "1:0"}},
+					{label: '<span class="green">是否LIKE搜索<span>',name: 'is_search',index: 'is_search',editable : true,edittype : "checkbox",editoptions : {value : "1:0"}},
+					{label: '<span class="green">label标题<span>',index: 'label_title',name:'label_title',editable: true },
+					{label: '<span class="green">输入域宽度<span>',name:'label_width',index: 'label_width',editable: true },
+					{label: '<span class="green">输入域是否必填<span>',name: 'is_required',index: 'is_required',editable : true,edittype : "checkbox",editoptions : {value : "1:0"}}, 
+					 
+					{label: '<span class="green">输入域提示信息<span>',index: 'label_helping',name:'label_helping',editable: true }, 
+					{label: '<span class="green">输入域类型<span>',index: 'input_type',name:'input_type',editable: true,edittype : "select",editoptions : {value :"input:input;select:select;checkbox:checkbox;radio:radio;editor:editor;date:date;datetime:datetime;image:image;imagelist:imagelist;filelist:filelist;picture:picture;datadlg:datadlg"}
+					}, 
+
+				],
+				sortname: 'id', //默认排序列
+				sortorder: 'desc', //默认排序方向
+				viewrecords: true, //显示总记录数
+				rowNum: 1000, //默认每页记录数
+				rowList: [10, 20, 30, 50, 100],
+				altRows: true, //隔行换色
+				autoWidth: true, //表格自动宽度
+				multiselect: true, //是否可多选
+				multiboxonly: true, // 只能勾选checkbox多选
+				loadComplete: function() { //每次载入数据后回调
+					//美化checkbox
+					$(this).JQchkCss();
+				}
+
+			});
+
+		//触发window.resize，重调jqGrid大小避免初始化表格预留滚动条位置
+		setTimeout(function() {
+			$(window).triggerHandler('resize.jqGrid')
+		}, 100);
+		$(gridSelector).jqGrid('sortableRows');  
+		$("#btnIndex")
+			.click(function() {
+				var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    if (ar_ids.length === 0) {
+                        $.modalAlert("请勾选需要自动生成代码的字段");
+                        return false;
+                    }
+				var data=$(gridSelector).JQgetRows(ar_ids);
+				var postData={data:data,module:"{$module}",controller:"{$controller}",table:"{$table}"};
+
+				$.ajaxSubmitForm({
+					url: '{:url("giiIndexPage")}',
+					param: {postData:postData},
+					success: function(data) {
+						if (data.state=='success') {
+							$('#content').val(data.content);
+							return;
+						}
+					}
+				});
+			});
+		$("#btnCreate")
+			.click(function() {
+				var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    if (ar_ids.length === 0) {
+                        $.modalAlert("请勾选需要自动生成代码的字段");
+                        return false;
+                    }
+				var data=$(gridSelector).JQgetRows(ar_ids);
+				var listtype=$('input:radio[name="listtype"]:checked').val();
+				var postData={data:data,module:"{$module}",controller:"{$controller}",table:"{$table}",listtype:listtype};
+				$.ajaxSubmitForm({
+					url: '{:url("giiCreatePage")}',
+					param: {postData:postData},
+					success: function(data) {
+							if (data.state=='success') {
+							$('#content').val(data.content);
+							return;
+						}
+					}
+				});
+			});
+		$("#btnEdit")
+			.click(function() {
+				var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    if (ar_ids.length === 0) {
+                        $.modalAlert("请勾选需要自动生成代码的字段");
+                        return false;
+                    }
+				var data=$(gridSelector).JQgetRows(ar_ids);
+				var listtype=$('input:radio[name="listtype"]:checked').val();
+				var postData={data:data,module:"{$module}",controller:"{$controller}",table:"{$table}",listtype:listtype};
+				$.ajaxSubmitForm({
+					url: '{:url("giiEditPage")}',
+					param: {postData:postData},
+					success: function(data) {
+						if (data.state=='success') {
+							$('#content').val(data.content);
+							return;
+						}
+					}
+				});
+			});
+		$("#btnRead")
+			.click(function() {
+				var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    if (ar_ids.length === 0) {
+                        $.modalAlert("请勾选需要自动生成代码的字段");
+                        return false;
+                    }
+				var data=$(gridSelector).JQgetRows(ar_ids);
+				var listtype=$('input:radio[name="listtype"]:checked').val();
+				var postData={data:data,module:"{$module}",controller:"{$controller}",table:"{$table}",listtype:listtype};
+				$.ajaxSubmitForm({
+					url: '{:url("giiReadPage")}',
+					param: {postData:postData},
+					success: function(data) {
+						if (data.state=='success') {
+							$('#content').val(data.content);
+							return;
+						}
+					}
+				});
+			});
+		$("#btnControl")
+			.click(function() {
+				var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    if (ar_ids.length === 0) {
+                        $.modalAlert("请勾选需要自动生成代码的字段");
+                        return false;
+                    }
+				var data=$(gridSelector).JQgetRows(ar_ids);
+				var postData={data:data,module:"{$module}",controller:"{$controller}",table:"{$table}"};
+				$.ajaxSubmitForm({
+					url: '{:url("giiControlPage")}',
+					param: {postData:postData},
+					success: function(data) {
+						if (data.state=='success') {
+							$('#content').val(data.content);
+							return;
+						}
+					}
+				});
+			});
+
+		//刷新
+		$("#btnReload")
+			.click(function() {
+				$(gridSelector).trigger("reloadGrid");
+			});
+	});
+</script>
+{/block}

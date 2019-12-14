@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		1111111111
+	</body>
+	<script type="text/javascript">
+	 
+	function submitForm(cb) {
+		alert(1111111);
+		return;
+		var postData = $("#form1").formSerialize();
+
+		$.ajaxSubmitForm({
+			url: "/admin/adminusers/save.html",
+			param: postData,
+			close:iscontinue,
+			success: function(data) {
+				try{
+					cb(data);
+				}catch(e){}
+			}
+		});
+	};
+</script>
+
+</html>

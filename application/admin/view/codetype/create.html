@@ -1,0 +1,130 @@
+{extend name="application/common/view/form.html" /}
+{block name="title"}actionadd{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+  
+		<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+				<tr>
+					<td  class="title" width="15%" nowrap="nowrap"><span class="red">*</span>上级节点
+					</td>
+					<td  class="field" width="35%">
+						<div class="input-group pull-left" >
+							<input  id="pid" class="required" name="pid"   type="hidden"/>
+							<input type="text" name="pname" id="pname" class="form-control search-query admin_sea " placeholder="上级节点"   readonly="readonly" ally="#pid"/>
+								<span class="input-group-addon  addon-btn no-left-border"  id="pid_selectBtn" onclick="dataDlgTree('selectcodetype', 'pid_selectBtn',public_DlgCallBack);" data-dlgreturn="pid.val()=id;pname.val()=typename" data-dlgcallback="">
+									<i class="ace-icon fa fa-check"></i>
+								</span>
+								<span class="input-group-addon  addon-btn" onclick="clearValue('#pid,#pname');">
+									<i class="ace-icon fa fa-close"></i>
+								</span>
+						</div>
+						 <span class="helping"></span>
+					</td>
+					<td  class="title" width="15%" nowrap="nowrap"><span class="red">*</span>类型代码
+					</td>
+					<td  class="field" width="35%">
+						<div class="input-group pull-left">
+							<input type="text" name="typekey" id="typekey" class=" required">
+						</div>
+						<span class="helping"></span>
+					</td>
+				</tr>
+				<tr>
+					<td  class="title"   nowrap="nowrap"><span class="red">*</span>类型名称
+					</td>
+					<td  class="field">
+						<div class="input-group pull-left">
+							<input class="required   " id="typename" name="typename" type="text"/>
+						</div>
+						<span class="helping"></span>
+					</td>
+					<td  class="title"   nowrap="nowrap">是否为系统代码
+					</td>
+					<td  class="field">
+								<label>
+						            <input name="issystem" type="radio" class="ace"   value="1">
+						            <span class="lbl">是</span>
+						        </label>
+						        <label>
+						            <input name="issystem" type="radio" class="ace" checked="checked"  value="0">
+						            <span class="lbl">否</span>
+						        </label>
+					</td>
+				</tr>
+				<tr>
+					
+					<td  class="title"   nowrap="nowrap">是否目录
+					</td>
+					<td  class="field">
+								<label>
+						            <input name="isdir" type="radio" class="ace"  value="1">
+						            <span class="lbl">是</span>
+						        </label>
+						        <label>
+						            <input name="isdir" type="radio" class="ace"  checked="checked"   value="0">
+						            <span class="lbl">否</span>
+						        </label>
+					</td>
+					<td  class="title"   nowrap="nowrap">排序号
+					</td>
+					<td  class="field" >
+						<div class="input-group pull-left">
+							<input class=" " id="sortno" name="sortno" type="text"/>
+						</div>
+							<span class="helping"> </span>
+					</td>
+				</tr>
+ 				<tr>
+					<td  class="title"   nowrap="nowrap">代码管理方式
+					</td>
+					<td  class="field">
+						<div class="input-group pull-left">
+							 {$listtype}
+						</div>
+							<span class="helping"> </span>
+					</td>
+					<td  class="title"   nowrap="nowrap">备注
+					</td>
+					<td  class="field">
+						<div class="input-group pull-left">
+							<input class=" " id="remark" name="remark" type="text" />
+						</div>
+						<span class="helping"> </span>
+					</td>
+				</tr>
+  				
+ 
+		</table>
+
+	
+  
+{/block}
+{block name="footer"}
+
+
+<script type="text/javascript">
+
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		$.ajaxSubmitForm({
+			url: "{:url('save')}",
+			param: postData,
+			success: function(data) {
+				if (cb) {
+					cb(data);
+				}
+			}
+		});
+	};
+</script>
+{/block}

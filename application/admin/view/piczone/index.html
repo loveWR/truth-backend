@@ -1,0 +1,506 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		 <link rel="stylesheet" type="text/css" href="__ADMIN__/js/pic_zone/css/base.css" />
+		 <!--[if !IE]> -->
+	    <script src="__ADMIN__/ACE/components/jquery/dist/jquery.js"></script>
+	    <!-- <![endif]-->
+	    <!--[if IE]>
+	    <script src="__ADMIN__/ACE/components/jquery.1x/dist/jquery.js"></script>
+	    <![endif]-->
+				<script type="text/javascript" src="__ADMIN__/js/webuploader/webuploader.js"></script>
+		  <link href="__ADMIN__/js/jquery_ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+<script src="__ADMIN__/js/jquery_ztree/jquery.ztree.core.min.js"></script>
+<script src="__ADMIN__/js/jquery_ztree/jquery.ztree.excheck.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.typeahead.js"></script>
+		   <script src="__ADMIN__/js/layer/layer.js"></script>
+		<script src="__ADMIN__/js/tools.js__JSVER__"></script>
+		<style type="text/css">
+			.webuploader-element-invisible {display: none;}
+		</style>
+	
+	</head>
+	<body>
+		<div class="containers">
+			<div class="left_pannel">
+				<div class="row">
+
+
+          <h2>图片目录</h2>
+          <div class="tree-handle">
+          	<div class="search-tree">
+          		 <div class="form-group">
+           			<input type="input" class="form-control typeahead" id="input-select-node" placeholder="按文件夹名称实时搜索" value=""  data-typeahead='{"url":"/admin/piczone/getTypeahead","keyfield":"id","valuefield":"dir_name","returnid":""}'>
+            		<input type="button" class="search-btn">
+          </div>
+          	</div>
+          </div>
+         
+
+          <ul class="list-group ztree" id="actionTree"></ul>
+ 
+      </div>
+			</div>
+			<div class="main_pannel">
+				<div class="all-control-bar">
+        			<ol class="breadcrumb" id="J_Crumbs"><li class="active home"><i class="icon"></i>我的图片</li></ol>
+      			  <div class="control">
+            <div class="control-buttons" id="J_UpAndNew">
+              <button type="button" class="btn btn-primary up" data-spm-click="gostr=/tbimage;locaid=d4916817" ><span class="up-icon"></span>上传图片</button>
+              <button type="button" class="btn btn-default new" data-spm-click="gostr=/tbimage;locaid=d4916821" ><span class="new-icon"></span>新建文件夹</button>
+                         
+            </div>
+            <div class="search" id="J_SearForm">
+              <div class="search-form">
+                <input type="text" class="form-control search-input" placeholder="按文件夹名称/图片名称搜索">
+                <input type="button" class="search-btn" data-spm-click="gostr=/tbimage;locaid=d4916829">
+              </div>
+            </div>
+        </div>
+      			</div>
+      			<div class="page-bar clearfix" style="width: 1706px;">
+        <div class="select-bar clearfix" id="J_SelectBar">
+          <div class="select-all"><input type="checkbox" id="J_SelectAll" title="全选/反选"></div>
+          <div class="selected-msg">全选</div>
+          <ul class="controlBar selected-controls" id="J_ControlBar">
+          	<input type="hidden" name="cpid" id="cpid" class="">
+            <li class="replace"><a href="javascript:;"><i class="icon"></i>替换<span class="line"></span></a></li>
+            <li class="copy" id="copy" onclick="dataDlgTree('selectpicdir', 'copy', public_DlgCallBack);" data-dlgreturn="cpid.val()=id" data-dlgcallback="copypic"><a href="javascript:;"><i class="icon"></i>多图复制<span class="line"></span></a></li>
+            <script type="text/javascript">
+            	function copypic(){
+            		var newpid=$("#cpid").val();
+            		var ids=getselectids();
+            		$.ajax({
+            			url:'/admin/piczone/batchCopy?ids='+ids+'&dir_id='+newpid,
+            			success:function(){
+            				location.reload()
+            			}
+            		})
+            	}
+            </script>
+            <input type="hidden" name="pid" id="pid" class="">
+            
+                                    <li id='move' class="move" style="" onclick="dataDlgTree('selectpicdir', 'move', public_DlgCallBack);" data-dlgreturn="pid.val()=id" data-dlgcallback="movedir"><a href="javascript:;"><i class="icon"></i>移动<span class="line"></span></a></li>
+            <script type="text/javascript">
+            	function movedir(){
+            		var newpid=$("#pid").val();
+            		if(getselectids()){
+            			var ids=getselectids();
+            			$.ajax({
+            			url:'/admin/piczone/batchMove?ids='+ids+'&dir_id='+newpid,
+            			success:function(){
+            				location.reload()
+            			}
+            		})
+            		}
+            		else {
+            			var ids=$(".home").data('id')
+            			$.ajax({
+            			url:'/admin/piczone/mvDir?ids='+ids+'&dir_id='+newpid,
+            			success:function(){
+            				location.reload()
+            			}
+            		})
+            		}
+            		
+            		
+            	}
+            </script>
+            <li class="rename" style=""><a href="javascript:;"><i class="icon"></i>重命名<span class="line"></span></a></li> 
+            <li class="delete" style=""><a href="javascript:;"><i class="icon"></i>删除</a></li>
+          </ul>
+          <ul class="right-menu selected-controls" id="J_PicRightmenu" style="">
+            <li class="replace"><a href="javascript:;"><i class="icon"></i>替换</a></li>
+            <li class="copy" style=""><a href="javascript:;"><i class="icon"></i>多图复制</a></li>
+            <li class="move" style=""><a href="javascript:;"><i class="icon"></i>移动</a></li>
+            <li class="rename" style=""><a href="javascript:;"><i class="icon"></i>重命名</a></li> 
+            <li class="delete" style=""><a href="javascript:;"><i class="icon"></i>删除</a></li>
+            <li class="upfile" style=""><a href="javascript:;"><i class="icon"></i>上传文件</a></li>
+            <li class="newfolder" style=""><a href="javascript:;"><i class="icon"></i>新建文件夹</a></li>
+          </ul>
+        </div>
+        <div class="sort-bar" id="J_SortBar" style="">
+                    <div class="sort my-dropdown">
+            <div class="drop-label">排序:</div>
+            <div class="dropdown" id="J_Sort">
+              <a class="dropdown-toggle down" data-type="0">时间</a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation">
+                  <a role="menuitem" data-type="uploadtime" data-sort="desc" class="time down" data-spm-click="gostr=/tbimage;locaid=d4916857">时间</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" data-type="uploadtime" data-sort="asc" class="time up" data-spm-click="gostr=/tbimage;locaid=d4916853">时间</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" data-type="filesize" data-sort="desc" class="big down" data-spm-click="gostr=/tbimage;locaid=d4916865">大小</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" data-type="filesize" data-sort="asc" class="big up" data-spm-click="gostr=/tbimage;locaid=d4916861">大小</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" data-type="oldname" data-sort="desc" class="name down" data-spm-click="gostr=/tbimage;locaid=d4916869">名称</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" data-type="oldname" data-sort="asc" class="name up" data-spm-click="gostr=/tbimage;locaid=d4916873">名称</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="btn-group show-type">
+            <button type="button" id="J_ShowList" class="btn btn-default" title="列表模式" data-spm-click="gostr=/tbimage;locaid=d4916845"><span class="list icon"></span></button>
+            <button type="button" id="J_ShowPic" class="btn btn-default" title="大图模式" data-spm-click="gostr=/tbimage;locaid=d4916849"><span class="big-pic icon active"></span></button>
+          </div>
+          <div class="page-msg" id="J_TopPagination">
+
+          </div>
+        </div>
+      </div>
+			<div class="pic-container" id="J_PicContainer" style="height: 460px;">
+
+        <div id="J_Picture" class="clearfix ui-selectable" style="min-height: 425px;">
+          <div class="list-head clearfix" data-cat="0">
+            <div class="span1">名称</div>
+            <div class="span2">类型</div>
+            <div class="span2">大小</div>
+            <div class="span2">更新时间</div>
+          </div>
+          <div class="height"></div>
+			
+			<div class="wrap">
+				
+			</div>
+</div>
+<div class="page-footer" id="J_PageFooter">
+				                                          <div class="pager-container clearfix" style="width: 100%;height: 32px;padding-top: 5px;opacity:1;">
+          <div class="" id="J_Pager">
+
+<div class="pagination"><ul>
+    
+    <li class="disabled"><a class="serverprevious disabled">«</a></li>
+    
+    
+    <li style="display:inline;" class="disabled page"><a href="javascript:;">1</a></li><li class=""><a class="servernext ">»</a></li>
+</ul></div>
+</div>
+          <div class="goto-page pull-left">
+             <form class="form-inline" role="form">
+                 <input name="_tb_token_" type="hidden" value="e8e7e180be3ee">
+                 <div class="form-group">
+                <label class="control-label" for="J_GotoPageNumber">到第</label>
+                <input type="text" class="form-control" id="J_GotoPageNumber">
+                <label class="control-label" for="J_GotoPageNumber">页</label>
+              </div>
+              <button class="btn btn-default" id="J_GotoPage">跳转</button>
+            </form>
+          </div>
+
+        </div>        
+      </div>
+			</div>
+		</div>
+		<script src="__ADMIN__/js/pic_zone/base.js" type="text/javascript" charset="utf-8"></script>
+		<div class="information label" id="J_Infor_Box">文件夹创建成功</div>
+	<div class="modal fade" id="J_Modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="modal-title">..</h3>
+            <div class="modal-subTitle"></div>
+          </div>
+          <span class="modal-msg label">Success</span>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="J_ModalSure" data-type="">确定</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <div class="modal fade ie8-model" id="J_IE8Modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="modal-title">IE8提示</h3>
+          </div>
+          <div class="modal-body">
+            <div class="infor-msg">
+              <p>新版图片空间，</p>
+              <p>操作不顺利，图片上传不了?</p>
+              <p>是浏览器过时了，<a href="//bbs.taobao.com/catalog/thread/514518-266241926.htm" target="_blank">点击查看解决攻略&gt;&gt;</a></p>
+            </div>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <div class="modal copy-model" id="J_CopyModel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="modal-title">图片复制</h3>
+          </div>
+          <div class="modal-body clearfix">
+            <div class="left-part">
+              <div class="alert alert-warning">拖动可以改变图片位置</div>
+              <script type="text/html" id="J_CopyItem">
+                <div class="item">
+                  <div class="img-con">
+                    <img src="<%=url%>"/>
+                  </div>
+                  <div class="number"><%=number%></div>
+                </div>
+              </script>
+              <div class="copy-pic-container clearfix">
+              </div>
+            </div>
+            <div class="right-part">
+              <fieldset>
+                 <legend>相邻两张图片之间</legend>
+                 <label class="radio">
+                   <input type="radio" name="space" value="1" checked="">
+                   无间距
+                 </label>
+                 <label class="radio">
+                   <input type="radio" name="space" value="2">
+                   一行间距
+                 </label>
+              </fieldset>
+              <fieldset>
+                 <legend>图片尺寸</legend>
+                 <label class="radio">
+                   <input type="radio" name="size" value="" checked="">
+                   原始尺寸
+                 </label>
+                 <label class="radio">
+                   <input type="radio" name="size" value="_760x760.jpg">
+                   天猫标准<span class="extend">(宽760px)</span>
+                 </label>
+                 <label class="radio">
+                   <input type="radio" name="size" value="_720x720.jpg">
+                   淘宝标准<span class="extend">(宽720px)</span>
+                 </label>
+              </fieldset>
+              <fieldset>
+                <button data-clipboard-text="get,code" id="copy_code" class="btn btn-default copy-code" onclick="javascript:goldlog.record('/tu.1.7','','','H1673836')">复制代码</button>
+                <button data-clipboard-text="get,link" id="copy_image" class="btn btn-default copy-link" onclick="javascript:goldlog.record('/tu.1.6','','','H1673835')">复制链接</button>
+                <button data-clipboard-text="get,pic" id="copy_url" class="btn btn-default copy-pic" onclick="javascript:goldlog.record('/tu.1.5','','','H1673834')">复制图片</button>
+              </fieldset>
+              </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <div class="modal Forece-delete-model" id="J_ForceDeleteModel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="modal-title">删除异常</h3>
+            <div class="modal-subTitle">下列文件没有被删除</div>
+          </div>
+          <div class="modal-body">
+            <table class="table table-hover">
+              <thead><tr><th title="全选/反选"><input type="checkbox" id="J_SelectAllDelete"></th><th>名称</th><th>类型</th><th>位置</th><th>原因</th></tr></thead>
+              <tbody>
+                
+              </tbody>
+              <script type="text/html" id="J_DeteleErrorTpl">
+                  <tr>
+                    <th>
+                      <%if(message === '分类下的图片存在引用禁止删除' || message === '图片存在引用禁止删除'){%>
+                          <%if(type ==='图片'){%>
+                            <input data-id="<%=file_id%>" data-type='<%=type%>' type="checkbox"/>
+                          <%}else{%>
+                            <input data-id="<%=cat_id%>" data-type='<%=type%>' type="checkbox"/>
+                          <%}%>
+                      <%}%>
+                    </th>
+                    <td title="<%=name%>"><%=name%></td>
+                    <td title="<%=type%>"><%=type%></td>
+                    <td title="<%=position%>"><%=position%></td>
+                    <td title="<%=message%>"><%=message%></td>
+                  </tr>
+              </script>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="J_ForceDelete">强制删除</button> 
+            <span>只有引用的图片和包含引用图片的文件夹才能被强制删除</span>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+   
+    <div id="J_detail" class="slide">
+    
+    <div id="J_detail_act" class="detail-actions">
+        <div class="basic-action">
+            <a id="J_DetailLink" class="detail-btn" data-clipboard-text="" href="javascript:;">复制链接</a>
+            <a id="J_DetailCode" class="detail-btn" data-clipboard-text="" href="javascript:;">复制代码</a>
+            <a id="J_DetailPic" class="detail-btn" data-clipboard-text="" href="javascript:;">复制图片</a>
+            <a id="J_DetailOriginal" target="_blank" class="detail-btn" href="">查看原图</a>
+        </div>
+    </div>
+    <div class="slide-main">
+        <div id="J_bigimage" class="slide-img-box"></div>
+
+        <div id="J_detail_info" class="detail-info">
+
+            <h2 class="detail-title" cmd="detail_rename" id="J_detail_name"></h2>
+
+            <div class="property" id="J-detail-property"></div>
+
+            <div class="pixel" id="J_detail_pixel"></div>
+
+        </div>
+
+    </div>
+
+    <a href="javascript:;" cmd="close_slide" class="close-slide" title="退出详情">×</a>
+
+</div>
+<script type="text/javascript">
+			
+  		
+  	</script>
+  	<script type="text/javascript">
+			
+			var filetypes='gif,jpg,jpeg,bmp,png,ico';
+
+   
+
+  		
+  	</script>
+  	<script type="text/javascript">
+  		
+		$(function(){
+			  var uploader1 = WebUploader.create({
+        // 选完文件后，是否自动上传。
+        auto: true,
+        // swf文件路径
+        swf: '/public/static/admin/js/webuploader/Uploader.swf',
+        // 文件接收服务端。
+        server: '/admin/upload/saveFile?autoDir=true&dir_id=0',
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick:  '.up',
+        duplicate:true,//允许重复上传
+
+        // 只允许选择图片文件。
+        accept: {
+            title: '请选择要上传的图片',
+            extensions: filetypes, //'gif,jpg,jpeg,bmp,png,ico';
+            mimeTypes: '*'
+        },
+        
+    });
+     uploader1.on( 'uploadSuccess', function( file , response) {
+        $.ajax({
+        	url:'',
+        	success:function(){
+        		
+        		location.reload();
+        	}
+        	
+        })
+    });
+			init_data()
+			var zTreeID='actionTree'; //对应DOM中ztree的容器，最好每个页面的ID不同，以便独立保存展开状态
+			var zNodes =  {$zNodes} ;
+			var zTree = null;
+			
+    		    var setting = {
+       callback: {  
+        onClick: function(e, treeId, treeNode){
+        	$("#J_ControlBar li").hide();
+        	$("#J_ControlBar .move,#J_ControlBar .delete,#J_ControlBar .rename").show();
+        	init_data(treeNode.id)
+        	$('.home').text(treeNode.dir_name);
+        	$('.home').data('id',treeNode.id);
+        	$(".list-head").data("cat",treeNode.id);
+        	var dir_id=$('.home').data('id');
+			var filetypes='gif,jpg,jpeg,bmp,png,ico';
+
+    var uploader = WebUploader.create({
+        // 选完文件后，是否自动上传。
+        auto: true,
+        // swf文件路径
+        swf: '/public/static/admin/js/webuploader/Uploader.swf',
+        // 文件接收服务端。
+        server: '/admin/upload/saveFile?autoDir=true&dir_id='+dir_id,
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick:  '.up',
+        duplicate:true,//允许重复上传
+
+        // 只允许选择图片文件。
+        accept: {
+            title: '请选择要上传的图片',
+            extensions: filetypes, //'gif,jpg,jpeg,bmp,png,ico';
+            mimeTypes: '*'
+        },
+        
+    });
+     uploader.on( 'uploadSuccess', function( file , response) {
+        $.ajax({
+        	url:'',
+        	success:function(){
+        		
+        		location.reload();
+        	}
+        	
+        })
+    });
+
+        },
+
+       },
+            data: {
+                key: {
+                    name: "dir_name"
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "pid",
+                    rootPId: "0"
+                }
+            },
+            view: {
+                showLine: true, //是否显示节点间的连线
+                selectedMulti: false,
+                dblClickExpand: true,
+      
+            }
+      }; 
+      
+        $.fn.zTree.init($("#"+zTreeID), setting, zNodes);
+					    zTree = $.fn.zTree.getZTreeObj(zTreeID);
+					  
+		})
+  	</script>
+  	<script type="text/javascript">
+  		   function searchNodes(){  
+    var treeObj = $.fn.zTree.getZTreeObj("actionTree");  
+    var keywords=$("#input-select-node").val();  
+    var nodes = treeObj.getNodesByParam("dir_name", keywords, null);  
+    if (nodes.length>0) {  
+        treeObj.selectNode(nodes[0]);  
+        $(".curSelectedNode").click()
+    }
+    else {
+    	alert('目录不存在，请输入精准的目录名')
+    }
+}  
+$(".search-tree .search-btn").click(searchNodes); 
+  	</script>
+	</body>
+</html>

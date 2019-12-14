@@ -1,0 +1,164 @@
+{extend name="application/common/view/dialog.html" /}
+
+{block name="main_content"}
+<div class=" searchArea row">
+
+<div class="col-xs-6  col-md-6">
+    <div class="input-group">
+        <input id="keyword" name="keyword" class="text form-control search-query admin_sea" type="text" placeholder=" 关键字" /> 
+        <span class="input-group-btn">
+            <button class="fa fa-search fa-lg btn  btn-myset  "  type="button" id="btnSearch" >搜索</button>
+        </span>
+    </div>
+</div>
+</div>
+<div class="clearfix"></div>
+ 
+<table id="gridTable"></table>
+<div id="gridPager"></div>
+ 
+{/block}
+
+{block name="footer"}
+<script type="text/javascript">
+    var _isMultiSelect = {$ismulti};
+    var gridSelector = "#gridTable";
+    jQuery(function() {
+        var pagerSelector = "#gridPager";
+        var parent_column = $(gridSelector).closest('[class*="col-"]');
+        $(window).on('resize.jqGrid',
+            function () {
+                $(gridSelector).jqGrid('setGridWidth', parent_column.width());
+                            $(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+                        });
+
+        //resize on sidebar collapse/expand
+        $(document).on('settings.ace.jqGrid',
+            function (ev, event_name, collapsed) {
+                if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                                setTimeout(function () {
+                                    $(gridSelector).jqGrid('setGridWidth', parent_column.width());
+                                            $(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+                                        },
+                                        20);
+                            }
+                        });
+
+         var postdata = $('.searchArea').formSerialize(); //收集搜索条件
+         var windowHeight = $(window).height();
+        var rowNum = windowHeight < 800 ? 10 : 20;    // window区域大于800，则默认20行一页， 否则10行。
+        $(gridSelector)
+        .jqGrid({
+                // caption: "用户列表",
+                url: "{:url('selectrole_json')}",
+                mtype: 'POST', //默认是GET
+                datatype: "json", //默认xml
+                height: 'auto', // initHeight, //表格高度
+                shrinkToFit: true, //拉伸列宽自动填满表格宽度
+                autoScroll: true, //是否自动横向滚动条
+                postData: postdata, //   发送的搜索条件数据
+                colModel: [
+                { label: 'id', name: 'id', index: 'u.id', width: 70, sortable: true, hidden: true, key: true },
+                {label: '角色名称', name: 'rolename', index: 'rolename', width: 170,sortable: false,},
+                        {label: '说明', name: 'roledesc', index: 'roledesc', width: 170,sortable: false},
+                       
+                ],
+                sortname:"id",
+                sortorder:"desc",
+                viewrecords: true, //显示总记录数
+                rowNum: rowNum, //默认每页记录数
+                rowList: [10, 20, 30, 50, 100],
+                pager: pagerSelector, //翻页容器
+                altRows: true, //隔行换色
+                autoWidth: true, //表格自动宽度
+                multiselect: true, //是否可多选
+                multiboxonly:  !_isMultiSelect, // 是否只能勾选checkbox多选  ,
+                loadComplete: function() { //每次载入数据后回调
+            //美化checkbox
+            $(this).JQchkCss();
+           
+            //更新分页图标
+            setTimeout(function() { updatePagerIcons(pagerSelector); }, 0);
+            //多选时，翻页后要勾中已经选择的行
+            setTimeout(function() { showSelected(); }, 20);
+        },
+        onSelectRow: function(rowid, status, e) { updateHashTabel(); },
+        onSelectAll: function(aRowids, status) { updateHashTabel(); }
+    });
+        //触发window.resize，重调jqGrid大小避免初始化表格预留滚动条位置
+        setTimeout(function() { $(window).triggerHandler('resize.jqGrid') }, 100);
+        
+        //搜索
+        $("#btnSearch").click(function() {
+             //jqgrid的方法 setGridParam方法会累加postdata的项,所以赋值前， 要先清空原有的项
+            var postData = $(gridSelector).jqGrid("getGridParam", "postData");  
+               $.each(postData, function (k, v) {  
+                   delete postData[k];  
+               }); 
+            $(gridSelector)
+            .jqGrid('setGridParam',
+            {
+                                        postData: $('.searchArea').formSerialize(), //收集搜索条件
+                                        page: 1 //搜索时，重定位到第一页
+                                    })
+                            .trigger("reloadGrid"); //重新载入
+                        });
+    });
+    var hashtable = new tools.HashTable();//记录多选时的记录行 ID为KEY，行对角为value
+
+    function updateHashTabel() {
+         if (!_isMultiSelect) return false; //不是多选时，不通过hashtable记录选择的行。
+
+                var ar_allid = $(gridSelector).jqGrid("getDataIDs"); //JQ中的所有ID
+                var ar_chkid = $(gridSelector).JQselectIds();  //JQ中的所有勾中的ID
+                for (var i = 0; i < ar_allid.length; i++) {
+                    var id = ar_allid[i];
+                    hashtable.remove(id);
+                }
+                for (var j = 0; j < ar_chkid.length; j++) {
+                    var id = ar_chkid[j];
+                    if (!hashtable.containsKey(id)) {
+                        var row = $(gridSelector).jqGrid("getRowData", id);
+                        hashtable.add(id, row);
+                    }
+                }
+                //console.log(hashtable.keys());
+                //console.log(hashtable.values());
+    }
+
+    //多选时，翻页后，选中已经选择的行（保存在hashtable）
+    function showSelected() {
+         if (!_isMultiSelect) return false;  //非多选时，不处理
+         var ar = hashtable.keys();
+         for (var j = 0; j < ar.length; j++) {
+            var id = ar[j];
+                    $(gridSelector).jqGrid("setSelection", id, false);  //选中某行， 并且不触发onSelectRow事件
+                }
+    }
+
+    //以数组形式 返回选择的节点对象
+    function returnData() {
+        if (!_isMultiSelect) { //单选时返回
+            var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+            var id = ar_ids[0];
+            if (ar_ids.length != 1) {
+                $.modalAlert("请选择一行数据(且只能选择一行)");
+                return false;
+            }
+            var ret = new Array();
+            ret.push($(gridSelector).jqGrid("getRowData", id));
+            return ret;
+        } else //多选时返回
+        {
+            if (hashtable.size() == 0) {
+                $.modalAlert("请选择数据");
+                return false;
+            }
+            var ret = hashtable.values();
+            return ret;
+        }
+    }
+
+</script>
+{/block}

@@ -1,0 +1,105 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}useradd{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+  
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					{if condition="tree ==$listtype"}
+					<tr>
+						
+						<td  class="title"   nowrap="nowrap">上级代码
+						</td>
+						<td  class="field">
+								{$pname}
+						</td>
+					</tr>
+					{/if}
+					<tr>
+						<td  class="title"   nowrap="nowrap">代码类型
+						</td>
+						<td  class="field">
+						{$typename}
+							
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">代码
+						</td>
+						<td  class="field" width="35%">
+						{$data.code}
+							
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">代码名称
+						</td>
+						<td  class="field" width="35%">
+						{$data.codename}
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">代码名称简称
+						</td>
+						<td  class="field">
+						{$data.shortname}
+						</td>
+					</tr>
+
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">助记码
+						</td>
+						<td  class="field" {if condition="null ==input('pid')"}colspan="3"{/if}>
+						{$data.mnemonic}
+							
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">排序码
+						</td>
+						<td  class="field">
+						{$data.sortno}
+							
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">是否为系统代码
+						</td>
+						<td  class="field">
+							{$data.issystem?"是":"否"}
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">级别
+						</td>
+						<td  class="field">
+						{$data.levelno}
+							
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">别名1
+						</td>
+						<td  class="field">
+						{$data.alias1}
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">别名2
+						</td>
+						<td  class="field" colspan="3">
+						{$data.alias2}
+							
+						</td>
+
+					</tr>
+				</table>
+	
+  
+{/block}

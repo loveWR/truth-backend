@@ -1,0 +1,89 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}useradd{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+  
+			
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">部门类型
+						</td>
+						<td  class="field" width="35%">
+							{$depttype}
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">上级部门
+						</td>
+						<td  class="field" width="35%">
+							{$pname?:'顶级'}
+							
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">部门代码
+						</td>
+						<td  class="field">
+						{$data.deptcode}
+							
+						</td>
+						<td  class="title"   nowrap="nowrap">部门名称
+						</td>
+						<td  class="field">
+						{$data.deptname}
+							
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">部门全称
+						</td>
+						<td  class="field">
+						{$data.fullname}
+							
+						</td>
+						<td  class="title"   nowrap="nowrap">部门简称
+						</td>
+						<td  class="field">
+						{$data.shortname}
+							
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">助记码
+						</td>
+						<td  class="field">
+						{$data.mnemonic}
+							
+						</td>
+						<td  class="title"   nowrap="nowrap">是否节点
+						</td>
+						<td  class="field">
+							{$data['isdir']}
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">排序号
+						</td>
+						<td  class="field">
+						{$data.sortno}
+							
+						</td>
+						<td  class="title"   nowrap="nowrap">备注
+						</td>
+						<td  class="field">
+						{$data.remark}
+						</td>
+					</tr>
+
+				</table>
+	
+				<input type="hidden" name="id" value="{$data.id}">
+				
+  
+{/block}
+
+

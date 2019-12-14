@@ -1,0 +1,7 @@
+图片配置 只能 绝对路径
+
+<script type="text/javascript" charset="utf-8" src="__ADMIN__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__ADMIN__/ueditor/ueditor.all.min.js"> </script>
+var ue = UE.getEditor('editor');
+
+<textarea class="required" id="editor" name="content"  type="text" /></textarea>

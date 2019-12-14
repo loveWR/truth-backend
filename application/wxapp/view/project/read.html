@@ -1,0 +1,41 @@
+{extend name="./application/common/view/dialog.html" /}
+{block name="title"}{/block}
+{block name="header"}
+
+{/block}
+{block name="main_content"}
+<table cellspacing='1' width='100%' border='0' align='center' class='form-table'> 
+<tr>					<td class="title" width="20%" size='' nowrap="nowrap">工作简述
+					</td>
+					<td class="field" width="80%" colspan="0">
+						{$data.brief}
+					</td>		</tr>
+<tr>					<td class="title" width="20%" size='' nowrap="nowrap">员工名字
+					</td>
+					<td class="field" width="80%" colspan="0">
+						{$data.realname}
+					</td>		</tr>
+<tr>					<td class="title" width="20%" size='' nowrap="nowrap">提交日期
+					</td>
+					<td class="field" width="80%" colspan="0">
+						{$data.workdate}
+					</td>		</tr>
+<tr>					<td class="title" width="20%" size='' nowrap="nowrap">日志内容
+					</td>
+					<td class="field" width="80%" colspan="0">
+						{$data.plan}
+					</td>		</tr>
+<tr>					<td class="title" width="20%" size='' nowrap="nowrap">遇到的问题
+					</td>
+					<td class="field" width="80%" colspan="0">
+						{$data.problems}
+					</td>		</tr>
+<tr>					<td class="title" width="20%" size='' nowrap="nowrap">所属项目
+					</td>
+					<td class="field" width="80%" colspan="0">
+						{$data.project_name}
+					</td>		</tr>
+ </table>
+{/block}
+{block name="footer"}
+{/block}

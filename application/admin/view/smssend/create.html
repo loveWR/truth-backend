@@ -1,0 +1,144 @@
+{extend name="application/common/view/form.html" /} {block name="title"}{/block} {block name="header"} {/block} {block name="main_content"}
+
+<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+	<tr>
+		<td class="title" width="15%" nowrap="nowrap"><span class="red">*</span>业务表名
+		</td>
+		<td class="field " width="35%">
+			<div class="input-group pull-left">
+				<input class=" required" id="biztable" name="biztable" placeholder="业务表名" type="text" />
+			</div>
+			<span class="helping"></span>
+		</td>
+		<td class="title" width="15%" nowrap="nowrap"><span class="red">*</span>业务记录ID
+		</td>
+		<td class="field" width="35%">
+			<div class="input-group pull-left">
+				<input class=" required" id="bizrec_id" name="bizrec_id" placeholder="业务记录ID" type="text" />
+			</div>
+			<span class="helping"></span>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>目标手机号码
+		</td>
+		<td class="field">
+			<div class="input-group pull-left">
+				<input class=" required" id="tono" name="tono" placeholder="目标手机号码" type="text" />
+			</div>
+			<span class="helping"></span>
+		</td>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>信息内容
+		</td>
+		<td class="field">
+			<div class="input-group pull-left">
+				<textarea class=" required" id="content" name="content" placeholder="信息内容" type="text"></textarea>
+			</div>
+			<span class="helping"></span>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>计划发送时间
+		</td>
+		<td class="field">
+			<div class="pull-left input_wrap">
+				<div class="input-group pull-left ">
+					<input class="form-control  datepicker required" id="plantime" name="plantime" type="text" data-datetype='datetime'>
+					<span class="input-group-addon   laydatebtn"></span>
+				</div>
+				<span class="helping"></span>
+			</div>
+		</td>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>实际发送时间
+		</td>
+		<td class="field">
+			<div class="pull-left input_wrap">
+				<div class="input-group pull-left ">
+					<input class="form-control  datepicker required" id="sendtime" name="sendtime" type="text" data-datetype='datetime'>
+					<span class="input-group-addon   laydatebtn"></span>
+				</div>
+				<span class="helping"></span>
+			</div>
+
+		</td>
+	</tr>
+
+	<tr>
+		<td class="title" nowrap="nowrap">发送状态
+		</td>
+		<td class="field">
+			{$flag}
+			<!-- {tag:select type='dict' dict='sendstate' name='flag'} -->
+		</td>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>操作用户ID
+		</td>
+		<td class="field">
+			<div class="input-group pull-left ">
+				<input class=" required" type="text" id="user_id" name="user_id" />
+			</div>
+			<span class="helping"></span>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>错误信息
+		</td>
+		<td class="field" colspan="3">
+			<div class="input-group pull-left ">
+				<textarea class=" required" type="text" id="errmsg" name="errmsg" placeholder="错误信息"></textarea>
+			</div>
+			<span class="helping"></span>
+		</td>
+
+	</tr>
+	<tr>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>回复时间
+		</td>
+		<td class="field">
+			<div class="pull-left input_wrap">
+				<div class="input-group pull-left">
+					<input class="form-control  datepicker required" id="backtime" name="backtime" type="text" data-datetype='datetime'>
+					<span class="input-group-addon   laydatebtn"></span>
+				</div>
+				<span class="helping"></span>
+			</div>
+		</td>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>回复内容
+		</td>
+		<td class="field">
+			<div class="input-group pull-left">
+				<textarea class=" required" type="text" id="backcontent" name="backcontent" placeholder="回复内容"></textarea>
+			</div>
+			<span class="helping"></span>
+		</td>
+	</tr>
+</table>
+
+{/block} {block name="footer"}
+<script type="text/javascript">
+	function submitForm(cb) {
+		if(!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch(e) {}
+			return false;
+		}
+
+		var postData = $("#form1").formSerialize();
+		//console.log(postData);return;
+
+		$.ajaxSubmitForm({
+			url: "{:url('save')}",
+			param: postData,
+			success: function(data) {
+				if(cb) {
+					cb(data);
+				}
+			}
+		});
+	};
+</script>
+
+{/block}

@@ -1,0 +1,75 @@
+{extend name="./application/common/view/form.html" /}
+{block name="title"}{/block} 
+{block name="header"}
+
+{/block}
+{block name="main_content"}
+<table cellspacing='1' width='100%' border='0' align='center' class='form-table'> 
+<tr>				<td class="title"	width="20%" nowrap="nowrap">
+				</td>
+				<td class="field" width="80%" colspan="0">
+					<div class="input-group pull-left">
+	                    <div class="col-sm-12">
+	                        <button type="button" class="fa fa-cloud-upload fa-lg btn btn-primary" id="loginid_imageex" onclick="uploadImage('img',false,0 , 0, cb_loginid);">上传</button>
+	                    </div>
+
+	                    <div class="loginid ">
+	                        <input type="hidden" name="loginid" id="loginid" value=""/>
+	                    </div>
+	                </div>
+                	<span class="helping"> </span>
+                </td>
+				<link href="__ADMIN__/js/attfile/css/attfilelist.css" rel="stylesheet" />
+				<link href="__ADMIN__/ACE/components/jquery-colorbox/colorbox.min.css" rel="stylesheet" />
+				<script src="__ADMIN__/js/jQueryRotate.js"></script>
+				<script src="__ADMIN__/ACE/components/jquery-colorbox/jquery.colorbox.js"></script>
+				<script src="__ADMIN__/js/attfile/imageList.js"></script>
+				<script src="__ADMIN__/ACE/components/jquery-ui/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+	            <script>    
+	            function cb_loginid(data)
+	            {
+	                $('.loginid').imageList("append",data);
+	            } 
+	            $(function() {
+	            		$('.loginid').imageList({
+	                        "num": 8,
+	                        "mode": 'edit',
+	                        "inputElement":"#loginid"
+	                    })
+	                    $(function(){setTimeout(function() {
+								$(".cboxElement").colorbox({
+									rel: 'group1'
+								});
+					
+							}, 1000);
+
+						})
+	            });
+	            </script></tr>
+ </table>
+{/block}
+{block name="footer"}
+
+<script type="text/javascript">
+
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		$.ajaxSubmitForm({
+			url: "{:url('save')}",
+			param: postData,
+			success: function(data) {
+				if (cb) {
+					cb(data);
+				}
+			}
+		});
+	};
+</script>
+{/block}

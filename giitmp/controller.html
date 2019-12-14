@@ -1,0 +1,153 @@
+<?php
+namespace app\{module}\controller;
+use think\Db;
+use app\admin\controller\Base;
+class {controller} extends Base
+{
+    /**
+     * 显示资源列表
+     */
+    public function index()
+    {
+        $roles=Db::name('roles')->order(" sortno asc ")->select();
+        $rolesddl=$this->initSelectByData($roles,'roleid','id','rolename',[],'全部角色');
+        $this->assign('rolesddl',$rolesddl);
+        return $this->fetch();
+    }
+    /**
+     * 首页json数据
+     */
+    public function index_json()
+    {
+        $w='';
+        if (input('is_adv_search')==1) {
+            //sql拼接
+            //$this->advsearch_fields()根据datatype拼接筛选条件
+            $fieldlist=$this->advsearch_fields(0);
+            $advsearch=input('adv_search');
+
+            $w=$this->analy_advsearch($advsearch,$fieldlist);
+            //dd($w);
+        }else{
+            $w.=idsInWhere('deptid',input('deptid'),'and');  // deptid in (1,2,3,)
+            if(input('roleid')&&input('roleid'))
+            {
+                $r=input('roleid/d');//防SQL注入强制整形
+                $w.=" and u.id in (select userid from user_role where roleid={$r})";
+            }
+            $k=addslashes( input('keyword'));//防SQL注入
+            if($k!='')
+            {
+                $w.=" {like} ";
+            } 
+        }    
+        $psql=new  \PageSQL();
+        $psql->select="SELECT id,{fields} ";
+        $psql->from =" FROM {table}  ";
+        $psql->where =' where 1=1 '.$w;
+        $psql->keyIndex=' id desc '; 
+        $db=new \DbTools();
+        $pager=new \PageJQ();
+        $rows=$db->getDataJQ($psql,$pager);
+
+        $json['rows']=$rows;
+        $json['records']=$pager->records;
+        $json['page']=$pager->page;
+        $json['total']=$pager->total;
+        return json($json);
+    }
+
+    /**
+     * 显示创建资源表单页.
+     */
+    public function create()
+    {
+        {create}
+
+        return $this->fetch();
+    }
+
+    /**
+     * 保存新建的资源
+     */
+    public function save()
+    {
+        $data=input('post.');
+        Db::name('{table}')->insert($data);
+        return json(['state'=>'success','message'=>'新增成功']);
+    }
+
+    /**
+     * 显示指定的资源
+     */
+    public function read($id)
+    {
+        $data=Db::name('{table}')->where('id',$id)->find();
+        $this->assign('data',$data);     
+        return $this->fetch();
+    }
+
+    /**
+     * 显示编辑资源表单页.
+     */
+    public function edit($id)
+    {
+        $data=Db::name('{table}')->where('id',$id)->find();
+        {edit}
+        $this->assign('data',$data);
+        return $this->fetch();
+    }
+
+    /**
+     * 保存更新的资源
+     */
+    public function update($id)
+    {
+        $data=input('post.');
+        Db::name('{table}')->where('id',$id)->update($data);
+        return json(['state'=>'success','message'=>'修改成功']);
+    }
+
+    /**
+     * 删除指定资源
+     */
+    public function delete()
+    {
+        Db::name('{table}')->where('id','in',input('ids'))->delete();
+        return json(['state'=>'success','message'=>'删除成功']);
+    }
+    public function  advsearch_fields($init_data=1)
+    {
+        $data=array();  
+        // data键 fieldname,datatype,fieldtitle,inputtype, inputdata,valuename,textname
+        //手动定义 ，注意fieldname可能有别名如： a.username,b.deptid，deptname,codename等。
+        //['fieldname'=>'','datatype'=>'','fieldtitle'=>'','inputtype'=>'', 'inputdata'=>'','valuename'=>'','textname'=>'']
+        /**
+           datatype:    int,decimal,varchar,date,datetime
+           inputtype:  input,select,datadlgtable,datadlgtree,date,datetime
+ 
+
+        */
+        //例如
+        // $sexarr=array();
+        //    if($init_data==1)
+        //    {
+        //      $roles=Db::name('roles')->select();
+        //      $sex=config('dict.sex');
+        //      foreach ($sex as $k => $v) {
+        //          $sexarr[]=['key'=>$k,'value'=>$v];
+        //      }
+        //  }
+        //  $data=[
+        //     'loginid'=>['fieldname'=>'loginid','datatype'=>'varchar','fieldtitle'=>'登录名','inputtype'=>'input','inputdata'=>'','valuename'=>'','textname'=>''],
+        //     'sex'=>['fieldname'=>'sex','datatype'=>'int','fieldtitle'=>'性别','inputtype'=>'select', 'inputdata'=>$sexarr,'valuename'=>'key','textname'=>'value'],
+        //     'deptid'=>['fieldname'=>'deptid','datatype'=>'int','fieldtitle'=>'单位','inputtype'=>'datadlgtable', 'inputdata'=>'selectdepts','valuename'=>'id','textname'=>'deptname'],
+        //     'lastlogin'=>['fieldname'=>'lastlogin','datatype'=>'datetime','fieldtitle'=>'上次登录时间','inputtype'=>'datetime'],
+        //     'createtime'=>['fieldname'=>'createtime','datatype'=>'datetime','fieldtitle'=>'注册日期','inputtype'=>'date'],
+        //     'defaultrole'=>['fieldname'=>'defaultrole','datatype'=>'int','fieldtitle'=>'默认角色','inputtype'=>'datadlgtable', 'inputdata'=>'selectrole','valuename'=>'id','textname'=>'rolename']
+
+        // ];
+        return $data;
+
+    }
+}

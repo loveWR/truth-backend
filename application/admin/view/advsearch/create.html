@@ -1,0 +1,54 @@
+﻿{extend name="application/common/view/form.html" /}
+ {block name="header"} {/block}
+  {block name="main_content"}
+
+	<table cellspacing="1" width="100%" border="0" align="center" class="form-table  "  >
+		<tr>
+			<td class="title" width="20%" nowrap="nowrap">
+				<span class="red">*</span>是否公用
+			</td>
+			<td class="field" width="80%" nowrap="nowrap">
+				<label>
+					<input name="ispub" type="radio" class="ace form-input" value="1">
+					<span class="lbl">是</span>
+				</label>
+				<label>
+					<input name="ispub" type="radio" class="ace form-input" checked="checked" value="0">
+					<span class="lbl">否</span>
+				</label>
+			</td>
+
+		</tr>
+		<tr>
+			<td class="title" width="20%" nowrap="nowrap">
+				<span class="red">*</span>收藏名称
+			</td>
+			<td class="field" width="80%" nowrap="nowrap">
+				<div class="input-group pull-left" style="width:50%">
+					<input type="text" name="title" size="" id="title" value="" class="required col-md-12" style="width: 100%;" /></div>
+					<span class="helping">如果名称已经存在，则覆盖</span>
+				
+			</td>
+
+		</tr>
+
+	</table>
+
+{/block} {block name="footer"}
+<script type="text/javascript">
+
+	function returnData( ) {
+		if(!$('#form1').valid()) {
+					try {
+						$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+					} catch(e) {}
+					return false;
+				}
+		var postData = $(".form-table").formSerialize();
+		return postData;
+
+	};
+	
+
+</script>
+{/block}

@@ -1,0 +1,114 @@
+{extend name="application/common/view/form.html" /} {block name="title"}{/block} {block name="header"} {/block} {block name="main_content"}
+
+<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+	<tr>
+		<td class="title" width="20%" nowrap="nowrap">定时任务
+		</td>
+		<td class="field" width="80%">
+			<div class="input-group pull-left">
+				{$tasklist}
+			</div>
+			<span class="helping"> </span>
+		</td>
+	</tr>
+	<tr>
+		<td class="title"><span class="red">*</span>开启时间
+		</td>
+		<td class="field">
+			<div class="pull-left input_wrap">
+				<div class="input-group pull-left">
+					<input class="form-control  datepicker required" id="start_time" name="start_time" type="text" data-datetype='datetime' value="{$data.start_time}">
+					<span class="input-group-addon   laydatebtn"></span>
+				</div>
+				<span class="helping"></span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="title" nowrap="nowrap"><span class="red">*</span>执行间隔(秒)
+		</td>
+		<td class="field">
+			<div class="input-group pull-left">
+				<input class=" required  " id="intervaltimes" name="intervaltimes" type="number" min="1" placeholder="秒为单位" value="{$data.intervaltimes}" />
+			</div>
+			<span class="helping"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="title" nowrap="nowrap">是否启动任务
+		</td>
+		<td class="field">
+			<label>
+								            <input name="isrun" type="radio" class="ace" {eq name="$data.isrun" value="1" } checked="checked" {/eq}  value="1">
+								            <span class="lbl">是</span>
+								        </label>
+			<label>
+								            <input name="isrun" type="radio" class="ace" {eq name="$data.isrun" value="0" } checked="checked" {/eq}  value="0">
+								            <span class="lbl">否</span>
+								        </label>
+		</td>
+	</tr>
+	<tr>
+		<td class="title" nowrap="nowrap">执行次数
+		</td>
+		<td class="field">
+			<div class="input-group pull-left">
+				<input class="   " id="times" name="times" type="number" min="1" value="{$data.times}" />
+			</div>
+			<span class="helping"> </span>
+		</td>
+	</tr>
+	<tr>
+		<td class="title">结束时间
+		</td>
+		<td class="field">
+
+			<div class="pull-left input_wrap">
+				<div class="input-group  pull-left">
+					<input class="form-control  datepicker " id="end_time" name="end_time" type="text" data-datetype='datetime' value="{$data.end_time}">
+					<span class="input-group-addon   laydatebtn"></span>
+				</div>
+				<span class="helping"> </span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="title" nowrap="nowrap">备注
+		</td>
+		<td class="field">
+			<div class="input-group  pull-left">
+				<input class="   " id="remark" name="remark" type="text" placeholder="" value="{$data.remark}" />
+			</div>
+			<span class="helping"> </span>
+		</td>
+	</tr>
+
+</table>
+
+<input type="hidden" name="id" value="{:input('id')}"> {/block} {block name="footer"}
+
+<script type="text/javascript">
+	 
+	$("#datetimepicker1").datetimepickerextend();
+	$("#datetimepicker2").datetimepickerextend();
+
+	function submitForm(cb) {
+		if(!$('#form1').valid()) {
+			return false;
+		}
+
+		var postData = $("#form1").formSerialize();
+		$.ajaxSubmitForm({
+			url: "{:url('update')}",
+			param: postData,
+			success: function(data) {
+				try {
+					if(cb) {
+						cb(data);
+					}
+				} catch(e) {}
+			}
+		});
+	};
+</script>
+{/block}

@@ -1,0 +1,68 @@
+{extend name="application/common/view/form.html" /}
+{block name="title"}{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+ 
+					<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap"><span class="red">*</span>角色名称
+							</td>
+							<td  class="field" width="80%"> 
+								<div class="input-group pull-left">
+			            			<input class="  required  " id="rolename" name="rolename" type="text"  value="{$data.rolename}"/>
+			            		</div>
+			            		<span class="helping"></span>
+							</td>
+
+						</tr>
+						<tr>
+							<td  class="title"  nowrap="nowrap"><span class="red">*</span>角色描述
+							</td>
+							<td  class="field" >
+								<div class="input-group pull-left">
+									<input class="required " id="roledesc" name="roledesc" placeholder="角色描述" type="text"  rows="1" cols="30" value="{$data.roledesc}" />
+								</div>
+								<span class="helping"></span>
+							</td>
+						</tr>
+						<tr>
+							<td  class="title" nowrap="nowrap"><span class="red">*</span>排序号
+							</td>
+							<td  class="field">
+								<div class="input-group pull-left">
+			            			<input class=" required" id="sortno" name="sortno" type="text" value="{$data.sortno}"/>
+			            		</div>
+			            		<span class="helping"></span>
+							</td>
+						</tr>
+					</table>
+
+
+			    <input type="hidden" name="id" value="{:input('id')}">
+			 
+			 
+{/block}
+{block name="footer"}
+
+	<script type="text/javascript">
+	  
+	    function submitForm(cb) {
+	        if (!$('#form1').valid()) {
+	            return false;
+	        }
+	        var postData = $("#form1").formSerialize();
+	        $.ajaxSubmitForm({
+	            url: "{:url('update')}",
+	            param: postData,
+	            success: function(data) {
+	               try{
+	               	if(cb) {cb(data);}
+				}catch(e){}
+	            }
+	        });
+	    };
+	</script>
+{/block}

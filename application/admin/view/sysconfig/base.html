@@ -1,0 +1,151 @@
+{extend name="application/common/view/list.html" /}
+{block name="header"}
+<script  src="__ADMIN__/js/webuploader/webuploader.js"></script>
+    <link  href="__ADMIN__/ACE/components/jquery-colorbox/colorbox.min.css" rel="stylesheet" />
+    <script src="__ADMIN__/ACE/components/jquery-colorbox/jquery.colorbox.js"></script>
+    <script src="__ADMIN__/js/attfile/imageList.js"></script>
+    <script src="__ADMIN__/js/jQueryRotate.js"></script>
+    <script src="__ADMIN__/js/Sortable-master/Sortable.js"></script>
+    <!-- 图片剪切 -->
+    <link rel="stylesheet" href="__ADMIN__/js/cropper/cropper.css" />
+    <script src="__ADMIN__/js/cropper/cropper.js"></script>
+    <script src="__ADMIN__/js/cropper/main.js"></script>
+    <!-- 附件列表 -->
+    <link href="__ADMIN__/js/attfile/css/attFileList.css" rel="stylesheet" />
+    <script src="__ADMIN__/js/attfile/attFileList.js"></script>
+    <script src="__ADMIN__/js/jquery-validate/jquery.validate.min.js"></script>
+{/block}
+{block name="main_content"}
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal validate" role="form" id="form1" method="post" >
+                            {:token('__token__'.getGUID(), 'sha1')}
+                                    <table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+                                        <tr>
+                                            <td  class="title" width="20%" nowrap="nowrap">网站名称
+                                            </td>
+                                            <td  class="field" width="80%">
+                                                <div class="input-group pull-left">
+                                                    <input class=""  id="web_name" name="web_name" type="text" value="{$sysconfig.web_name}"/>
+                                                <span class="helping"></span>
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">网站域名
+                                            </td>
+                                            <td  class="field" width="35%">
+                                                <div class="input-group pull-left">
+                                                    <input class=""  id="web_url" name="web_url" type="text" value="{$sysconfig.web_url}"/>
+                                                </div>
+                                                <span class="helping"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">封面图片
+                                            </td>
+                                            <td  class="field" width="35%">
+                                                <div id="uploader-demo" class="uploader col-sm-9">
+                                                        <img src="{$sysconfig.web_logo}" alt="" id="img1" width="100" height="100">
+                                                        <div class="uploadInfo text-center">
+                                                            上传成功
+                                                        </div>
+                                                        <!--用来存放item-->
+                                                        <div id="filePicker1">选择图片</div>
+                                                        <input type="hidden" name="web_logo" id="web_logo" value="{$sysconfig.web_logo}" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">网站ICP备案信息
+                                            </td>
+                                            <td  class="field" width="35%">
+                                                <div class="input-group pull-left">
+                                                    <input class=""  id="web_icp" name="web_icp" type="text" value="{$sysconfig.web_icp}"/>
+                                                </div>
+                                                <span class="helping"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">网站状态
+                                            </td>
+                                            <td  class="field" width="35%">
+                                                <label>
+                                                    <input name="web_state" type="radio" class="ace" value="1"  {eq name="$sysconfig.web_state" value="1" } checked="checked" {/eq} > 
+                                                    <span class="lbl">打开</span>
+                                                </label>
+                                                <label>
+                                                    <input name="web_state" type="radio" class="ace"  value="0"  {eq name="$sysconfig.web_state" value="0" } checked="checked" {/eq}>
+                                                    <span class="lbl">关闭</span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">关闭网站原因
+                                            </td>
+                                            <td  class="field" width="35%">
+                                               
+                                                    <textarea class="col-xs-10 col-sm-5" id="web_close_reason" name="web_close_reason" placeholder="" type="text" />{$sysconfig.web_close_reason}</textarea>
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">脏话过滤
+                                            </td>
+                                            <td  class="field" width="35%">
+                                               
+                                                    <textarea class="col-xs-10 col-sm-5" id="zh_filter" name="zh_filter" placeholder="格式：“脏话词=替换词”，每行词设置以回车分开！如：他妈的=***" type="text" />{$sysconfig.zh_filter}</textarea>
+                                               
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">IP过滤
+                                            </td>
+                                            <td  class="field" width="35%">
+                                               
+                                                    <textarea class="col-xs-10 col-sm-5" id="ip_filter" name="ip_filter" placeholder="支持通配符*(表示所有)，例如：202.103.23.* 表示202.103.23.0到202.103.23.255之间的IP" type="text" />{$sysconfig.ip_filter}</textarea>
+                                               
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <div class="text-center buttonArea">
+                                    	<button class="fa fa-save green larger fa-lg btn btn-primary" id="submit" type="button">保存配置</button>
+                                    </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{/block}
+{block name="footer"}
+<script>
+	$(function(){
+		imagePicker('#filePicker1','#img1','#web_logo',false);
+        $("#submit").click(function () {
+                    if (!$('#form1').valid()) {
+                        try {
+                            $(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+                        } catch (e) {
+                        }
+                        return false;
+                    }
+                    var postData = $("#form1").formSerialize(); 
+                    $.ajaxSubmitForm({
+                        url: "{:url('save')}?configgroup=1",//配置分类
+                        param: postData,
+                        success: function(data) {
+                            location.reload();
+                        }
+                    });
+                });
+	})
+</script>
+{/block}

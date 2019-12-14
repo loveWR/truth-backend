@@ -1,0 +1,145 @@
+{extend name="application/common/view/form.html" /}
+{block name="title"}deptadd{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+  
+			
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+						<td  class="title "  width="15%" nowrap="nowrap">部门类型
+						</td>
+						<td  class="field"   width="35%">
+							<div class="input-group pull-left">
+								{$typeidSelect}
+							</div>
+							<span class="helping"> </span>
+						</td>
+						<td  class="title" width="15%"   nowrap="nowrap"><span class="red">*</span>上级部门
+						</td>
+						<td  class="field" width="35%">
+							<div class="input-group pull-left" >
+								<input  id="pid" class="required" name="pid"   type="hidden"/>
+								<input type="text" name="deptname" id="deptname" class="form-control search-query admin_sea " placeholder="请选择上级"   readonly="readonly" ally="#pid"/>
+								<span class="input-group-addon  addon-btn no-left-border"  id="deptid_selectBtn" onclick="dataDlgTree('selectdept', 'deptid_selectBtn',public_DlgCallBack);" data-dlgreturn="pid.val()=id;deptname.val()=deptname" data-dlgcallback="">
+				                    <i class="ace-icon fa fa-check"></i>
+				                </span>
+								<span class="input-group-addon  addon-btn" onclick="clearValue('#deptid,#deptname');">
+				                    <i class="ace-icon fa fa-close"></i>
+				                </span>
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" nowrap="nowrap"><span class="red">*</span>部门代码
+						</td>
+						<td  class="field" >
+							<div class="input-group pull-left">
+								<input class=" required " id="deptcode" name="deptcode" type="text"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+						<td  class="title"  nowrap="nowrap"><span class="red">*</span>部门名称
+						</td>
+						<td  class="field"  >
+							<div class="input-group pull-left">
+								<input class=" required " id="deptname" name="deptname" type="text"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap"><span class="red">*</span>部门全称
+						</td>
+						<td  class="field"  >
+							<div class="input-group pull-left">
+								<input class="required " id="fullname" name="fullname" type="text"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+						<td  class="title"   nowrap="nowrap"><span class="red">*</span>部门简称
+						</td>
+						<td  class="field"  >
+							<div class="input-group pull-left">
+								<input class="required " id="shortname" name="shortname" type="text"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">助记码
+						</td>
+						<td  class="field"  >
+							<div class="input-group pull-left">
+								<input class="  " id="mnemonic" name="mnemonic" type="text"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+						<td  class="title"   nowrap="nowrap">是否节点
+						</td>
+						<td  class="field"  >
+							<label>
+					            <input name="isdir" type="radio" class="ace"  value="1">
+					            <span class="lbl">是</span>
+					        </label>
+					        <label>
+					            <input name="isdir" type="radio" class="ace" checked="checked"   value="0">
+					            <span class="lbl">否</span>
+					        </label>
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">排序号
+						</td>
+						<td  class="field"  >
+							<div class="input-group pull-left">
+								<input class=" " id="sortno" name="sortno" type="number"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+						<td  class="title"   nowrap="nowrap">备注
+						</td>
+						<td  class="field"  >
+							<div class="input-group pull-left">
+								<input class=" " id="remark" name="remark" type="text"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+					</tr>
+
+				</table>	
+			
+  
+{/block}
+{block name="footer"}
+
+
+<script type="text/javascript">
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		//console.log(postData);return;
+		$.ajaxSubmitForm({
+			url: "{:url('save')}",
+			param: postData,
+			success: function(data) {
+				if (cb) {
+					cb(data);
+				}
+			}
+		});
+	};
+</script>
+{/block}

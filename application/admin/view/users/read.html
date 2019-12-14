@@ -1,0 +1,93 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}useradd{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+
+  
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table" style="table-layout:fixed">
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">姓名
+						</td>
+						<td  class="field" width="35%">
+						 {$data.realname}  
+							
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">性别
+						</td>
+						<td  class="field" width="35%">
+						 {$data.sex} 
+							
+						</td>
+					</tr>			
+					<tr>
+						<td  class="title" width="20%" nowrap="nowrap">身份证号码
+						</td>
+						<td  class="field">
+							{$data.idno}
+						</td>
+						<td  class="title" width="20%" nowrap="nowrap">固定电话
+						</td>
+						<td  class="field">
+							{$data.tel}
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="20%" nowrap="nowrap">手机
+						</td>
+						<td  class="field">
+							{$data.mobile}
+						
+						</td>
+						<td  class="title" width="20%" nowrap="nowrap">邮箱
+						</td>
+						<td  class="field">
+							{$data.email}
+							
+						</td>
+					</tr>
+					<tr >
+						<td class="title">所在单位</td>
+						<td class="field" colspan="3">
+							{$deptname}
+						</td>
+					</tr>
+					<tr>
+						<td class="title">可登录IP</td>
+						<td class="field"  colspan="3">
+							{$data.iprange}
+						</td>
+
+
+					</tr>
+					<tr>
+						<td class="title">
+							指派角色
+						</td>
+						<td class="field" colspan="3">
+							{:implode(',',$data.assignrole)}
+						
+					</tr>
+
+					<tr>
+						<td class="title">排序号</td>
+						<td class="field">
+							{$data.sortno}
+					
+						</td>
+						<td class="title">UkeyID</td>
+						<td class="field">
+							{$data.ukeyid}
+							
+						</td>
+							
+
+					</tr>
+
+				</table>
+
+
+  
+{/block}

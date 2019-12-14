@@ -1,0 +1,66 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}useradd{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+  
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">上级节点
+						</td>
+						<td  class="field" width="35%">
+							{$pname}
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">类型代码
+						</td>
+						<td  class="field" width="35%">
+							{$data.typekey}
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"  nowrap="nowrap">类型名称
+						</td>
+						<td  class="field">
+						{$data.typename}
+							
+						</td>
+						<td  class="title"  nowrap="nowrap">是否为系统代码
+						</td>
+						<td  class="field">
+							{$data.issystem}
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"  nowrap="nowrap">是否目录
+						</td>
+						<td  class="field">
+						{$data.isdir}
+						</td>
+						<td  class="title"  nowrap="nowrap">排序号
+						</td>
+						<td  class="field">
+						{$data.sortno}
+							
+						</td>
+					</tr>
+	 				<tr>
+						<td  class="title"  nowrap="nowrap">代码管理方式
+						</td>
+						<td  class="field">
+							 {$data.listtype}
+						</td>
+						<td  class="title"  nowrap="nowrap">备注
+						</td>
+						<td  class="field" colspan="3">
+						{$data.remark}
+							
+						</td>
+					</tr>
+	 
+				</table>
+				<input type="hidden" name="id" value="{$data.id}">
+  
+
+{/block}

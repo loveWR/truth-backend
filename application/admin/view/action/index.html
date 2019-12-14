@@ -1,0 +1,374 @@
+{extend name="application/common/view/blank.html" /}
+{/block}
+{block name="header"}
+<link href="__ADMIN__/js/jquery_ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+<script src="__ADMIN__/js/jquery_ztree/jquery.ztree.core.min.js"></script>
+<script src="__ADMIN__/js/jquery_ztree/jquery.ztree.excheck.js"></script>
+<script src="__ADMIN__/js/bootstrap-contextmenu.js"></script>
+
+<link rel="stylesheet" type="text/css" href="__ADMIN__/js/layout-master/source/stable/layout-default.css"/>
+<script src="__ADMIN__/js/layout-master/source/jquery/jquery-ui-1.10.4.js" type="text/javascript" charset="utf-8"></script>
+<script src="__ADMIN__/js/layout-master/source/stable/jquery.layout.min.js" type="text/javascript" charset="utf-8"></script>
+{/block}
+
+{block name="main_content"}
+<form class="form-horizontal" role="form" id="form1" method="post" action="{:url('index')}" >
+    <div class="buttonArea">
+        {if haveAction('admin/action/create')}
+        <button class="fa fa-plus-square green larger fa-lg btn btn-primary" type="button" id="btnAdd" >新增</button>
+        {/if}
+        {if haveAction('admin/action/edit')}
+        <button class="fa fa-edit green larger fa-lg btn btn-info" id="btnEdit"  type="button" >修改</button>
+        {/if}
+        {if haveAction('admin/action/delete')}
+        <button class="fa fa-trash-o red fa-lg btn btn-danger" id="btnDelete"  type="button" >删除</button>
+        {/if}
+        {if haveAction('admin/action/assignrole')}
+        <button class="fa fa-plus-square fa-lg btn btn-primary" id="assignRole"  type="button" >指派角色</button>
+        {/if}
+        {if haveAction('admin/action/batch')}
+        <button class="btn btn-info dropdown-toggle fa fa-th" id="btnBatch"  type="button" >批量CRUD</button>
+        {/if}
+        <button class="fa fa-folder fa-lg btn btn-primary fa-folder-open" id="btnExp"  type="button" >全部展开</button>
+
+        <button class="fa fa-refresh fa-lg btn btn-yellow" id="btnReload"  type="button" >刷新</button>
+        <div class="searchArea pull-right col-md-3 col-xs-5">
+            <div class="fastSearch row">
+                <div class="input-group pull-left">
+                    <input type="text" name="keyword" id="keyword" class="form-control search-query admin_sea" value="{:input('keyword')}" placeholder="输入关键字"/>
+                    <span class="input-group-btn">
+                        <button class="fa fa-search fa-lg btn  btn-myset  " type="submit" id="btnSearch">搜索</button>
+                    </span>
+                </div>
+                <span class="helping"></span>
+            </div>
+        </div>
+
+    </div>
+</form>
+<div class="clearfix"></div>
+<div class="container-fluid row">
+    <div class="  left"  >
+        <div id="divcontainer">
+           <ul id="actionTree" class="ztree"></ul>
+       </div>
+   </div>
+   <div class="  right" >
+     <iframe src="about:blank" frameborder="0" width="99.99%" height="98%" name="rightframe"  id="rightframe" ></iframe>
+ </div>
+</div>
+
+<div id="context-menu" style="position: absolute; z-index: 99999999; top: -430px; left: 533px;" class="open">
+    <ul class="dropdown-menu" role="menu">
+        <li><a tabindex="-1"  class="selcetchild">选择子节点</a></li>
+        <li><a tabindex="-1"  class="unselectchild">反选子节点</a></li>
+        <li><a tabindex="-1"  class="selectchildren">选择子孙节点</a></li>
+        <li><a tabindex="-1"  class="unselectchildren">反选子孙节点</a></li>
+    </ul>
+</div>
+<!-- PAGE CONTENT ENDS  -->
+
+{/block}
+
+{block name="footer"}
+
+<script>
+var zTreeID='actionTree'; //对应DOM中ztree的容器，最好每个页面的ID不同，以便独立保存展开状态
+var zNodes =  {$zNodes} ;
+var zTree = null;
+
+$(function(){
+    //setting start 
+    var setting = {
+       callback: {
+        onExpand: onExpand,    
+        onCollapse: onCollapse,
+        onClick: onClick,
+        onNodeCreated:rightClick
+        },
+        check: {
+        enable: true,
+        chkStyle: "checkbox",
+                chkboxType: { "Y": "", "N": "" },   //父子关联关系 Y 选择时 N 取消选择时
+                radioType: "all"
+            },
+            data: {
+                key: {
+                    name: "actname"
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "pid",
+                    rootPId: "0"
+                }
+            },
+            view: {
+                showLine: true, //是否显示节点间的连线
+                selectedMulti: false,
+                dblClickExpand: true,
+                fontCss: getFont
+            }
+      };  
+    //setting end 
+
+    function getFont(treeId, node) {
+        return node.font ? $.parseJSON( node.font  ): {};
+    }
+
+
+    function onClick(e, treeId, treeNode) {
+        zTree.checkAllNodes(false);
+        zTree.checkNode(treeNode, true, false);
+    }
+   //节点加上右键菜单
+    function rightClick(event, treeId, treeNode){
+        $(".ztree a").data({"toggle":"context","target":"#context-menu"});
+        $('.ztree a').contextmenu({onItem:function(context,e){
+           var tid=context.attr("id");tid=tid.substr(0,tid.length-2);
+           var node=zTree.getNodeByTId(tid);
+           var options=$(e.target).attr("class");
+           switch (options){
+            case "selcetchild":
+            checkSub(node, false, false) 
+            break;
+            case "unselectchild":
+            checkSub(node, true, false)
+            break;
+            case "selectchildren":
+            checkSub(node, false, true) 
+            break;
+            case "unselectchildren":
+            checkSub(node, true, true) 
+            break;
+        }
+
+    }});
+    }
+    //节点展开事件
+    function onExpand(event, treeId, treeNode) {
+        var openids = localStorage.getItem(treeId);
+        var id = treeNode.id;
+        if (!openids) {
+            localStorage.setItem(treeId , "," + id + ",");
+        } else {
+            if (openids.indexOf("," + id + ",") == -1) {
+                openids = openids + id + ",";
+                localStorage.setItem(treeId,openids);
+            }
+        }
+    }
+   //节点折叠事件
+   function onCollapse(event, treeId, treeNode) {
+        var openids = localStorage.getItem(treeId );
+        var id = treeNode.id;
+        if (openids) {
+            openids = openids.replace("," + id + ",", ",");
+            localStorage.setItem(treeId , openids );
+        }
+    }
+    //递归选择（不选择）子孙节点
+    function checkSub(treeNode, isReverse, isRecursive) {
+        var nodes = treeNode.children;
+        if (!nodes || nodes.length == 0) return; //叶节点没有childNodes
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].checked = isReverse == true ? !nodes[i].checked : true;
+            zTree.updateNode(nodes[i], false);
+            if (isRecursive) {
+                checkSub(nodes[i], isReverse, isRecursive)
+            }
+        }
+    }
+
+
+    //取得上次展开的ID
+    var openids = localStorage.getItem(zTreeID );
+    if(openids){
+        for (var i = 0; i < zNodes.length; i++) {
+            var id = zNodes[i].id;
+            if (openids.indexOf("," + id + ",") > -1) {
+                zNodes[i].open = true;
+            }
+        }
+    }
+    //初始化TREE
+    $.fn.zTree.init($("#"+zTreeID), setting, zNodes);
+    zTree = $.fn.zTree.getZTreeObj(zTreeID);
+
+
+     //layout自动大小
+        function setHeight(){    //设置顶层容器高度
+            var height=$(window).height()-$(".buttonArea").height()-$("#breadcrumbs").height()-$("#navbar").height()-60;
+            $(".container-fluid").height(height);
+        }
+        setHeight();
+        $(window).resize(function(){
+            setHeight()
+        });
+        var all=$(".container-fluid").width()
+        $(".container-fluid").layout({
+            resizable:true,     //可调节大小
+            closable:false,
+            fit:true,
+            west__size:400,   //设置初始化宽度
+            center__size:all-400,//设置初始化宽度
+            applyDefaultStyles: true,   //应用默认样式
+            applyDemoStyles:true,
+            west__paneSelector:   "div.left",   //左侧容器
+            center__paneSelector: "div.right" ,  //右侧容器
+            center__maskContents:true  //iframe 卡壳问题
+        });
+   
+});
+
+
+
+   // 按钮动作
+   $(function() {
+
+        //新增
+        $("#btnAdd")
+        .click(function() {
+            $.modalOpen({
+                title: '新增',
+                width: "960px",
+                height: "600px",
+                        url: '{:url("create")}', //弹出窗口打开的URL
+                        callBack: function(idx) { //确定按钮提交 修改窗口中的保存
+                            var win = $.modalWindow(idx); //取得弹出窗口
+                            win.submitForm(reloadTree); //提交弹出窗口的保存按钮
+                        }
+                    });
+        });
+        //修改
+        $("#btnEdit")
+        .click(function() {
+            var nodes = zTree.getCheckedNodes(true);
+            if (nodes.length === 1) {
+                var id = nodes[0].id;
+                $.modalOpen({
+                    title: '修改',
+                    width: "960px",
+                    height: "600px",
+                    url: '{:url("edit")}?id=' + id,
+                    callBack: function(idx) {
+                        var win = $.modalWindow(idx);
+                        win.submitForm(reloadTree);
+                    }
+                });
+            } else {
+                $.modalAlert("请选择一条记录");
+                return false;
+            }
+        });
+
+
+        //删除
+        $("#btnDelete")
+        .click(function() {
+                    var nodes =zTree.getCheckedNodes(true); //取得所有被勾选的行的ID，数组形式
+                    if (nodes.length === 0) {
+                        $.modalAlert("请勾选要删除的记录");
+                        return false;
+                    }
+                    var ids=$.projoin(nodes,'id');
+                    var paramData = { ids: ids }; //将数组以逗号拼接
+                    $.ajaxConfirm({
+                        url: '{:url("delete")}',
+                        param: paramData,
+                        success: function(data) {
+                         window.location.reload();
+                     }
+                 });
+                });
+
+        //查看
+        $("#btnRead")
+        .click(function() {
+            var nodes = zTree.getCheckedNodes(true);
+            if ( nodes.length === 1) {
+                var id = nodes[0].id;
+                $.slideOpen({
+                    title: '查看',
+                    url: '{:url("read")}?id=' + id,
+                    callBack: function(idx) {
+                        $.modalClose(idx);
+                    }
+                });
+            } else {
+                $.modalAlert("请选择一条记录");
+                return false;
+            }
+        });
+        //刷新
+        $("#btnReload")
+        .click(function() {
+            window.location.reload();
+        });
+        //批量操作
+        $("#btnBatch")
+        .click(function() {
+            var nodes = zTree.getCheckedNodes(true);
+            if (nodes.length === 1) {
+                var id = nodes[0].id; 
+                var paramData = { id: id };  
+                $.ajaxConfirm({
+                    url: '{:url("batch")}',
+                    prompt:"确定要批量生成吗？",
+                    param: paramData,
+                    success: function(data) {
+                        location.reload();
+                    }
+                });
+            } else {
+                $.modalAlert("请选择一条记录");
+                return false;
+            }
+        });
+        //指派角色      
+        $("#assignRole")
+        .click(function() {
+            var nodes = zTree.getCheckedNodes(true);
+            if ( nodes.length === 1) {
+                var id = nodes[0].id;
+                $.modalOpen({
+                    title: '指派角色',
+                    btn: ['关闭'],
+                    width: "960px",
+                    height: "850px",
+                    url: '{:url("assignrole")}?actionid=' + id,
+                    callBack: function(idx) {
+                        $.modalClose(idx);
+                    }
+                });
+            }
+            else {
+             $.modalAlert("请选择一条记录");
+             return false;
+         }
+     });
+
+        //展开与 折叠 切换
+        $("#btnExp").on("click",function(){
+            if($(this).hasClass("fa-folder-open"))
+            {
+                zTree.expandAll(true);
+                $(this).addClass("fa-folder").removeClass("fa-folder-open").text("折叠所有");
+                return false;
+
+            }
+            else {
+              zTree.expandAll(false);
+              localStorage.removeItem(zTreeID );
+             $(this).removeClass("fa-folder").addClass("fa-folder-open").text("展开所有");
+             return false;
+         }
+     });
+    });
+
+function reloadTree() {
+    window.location.reload();
+}
+
+</script>
+{/block}

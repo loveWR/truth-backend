@@ -1,0 +1,523 @@
+﻿{extend name="application/common/view/dialog.html" /}
+{block name="header"}
+{/block} {block name="main_content"}
+<form class="form-horizontal" role="form" id="form1" method="post">	
+	
+	<div class="searchArea">
+		<div class="row">
+			<div class="col-sm-7">
+				<div class="col-xs-6" style="width:110px">
+					<label class=" control-label no-padding-right">从收藏中选择</label>
+				</div>
+				<div class="col-xs-6">
+					<!--选择了收藏后， 提交表单到当前URL，取出选择的搜索条件 -->
+					{$fav_select}
+				</div>
+				<div class="clearfix">
+					
+				</div>
+			</div>
+			<div class="xsline hidden-sm hidden-md hidden-lg" style="height: 20px;">
+				
+			</div>
+			<div class="col-sm-5 text-right">
+				<button type="button" class="btn btn-xs  btn-myset" id="btnAdd" type="button">
+				<span class="ace-icon fa fa-plus-square icon-on-right bigger-110"></span> 加入收藏
+			</button>
+			<button type="button" class="btn btn-xs  btn-myset" id="btnEdit" type="button">
+				<span class="ace-icon fa fa-edit icon-on-right bigger-110"></span> 管理收藏
+			</button>
+			</div>
+ 
+		</div>
+	</div>
+
+
+	<table cellspacing="1" width="100%" border="0" align="center" class="form-table advsearch-list table-list">
+
+	</table> 
+
+	<div  class="hidden">
+		<table border="" cellspacing="" cellpadding="" title="条件模板" >
+			<tbody class="table-tpl">
+				<tr data-id="__id__" id="tr__id__">
+					<td class="title col-fieldname" width="30%" nowrap="nowrap">
+						<!--被后台定义的fieldlist 初始化-->
+						<select name="fieldname" class="fieldname pct100 " id=fieldname__id__>
+							<option value="0" data-type="text">请选择字段</option>
+						</select>
+					</td>
+					<td class="title col-comptype" width="15%" nowrap="nowrap">
+						<!--根据选择的字段动态生成-->
+						<select name="comptype" class="comptype  pct100 ">
+							<option value="=">等于</option>
+							<option value="!=">不等于</option>
+							<option value=">">大于</option>
+							<option value="<">小于</option>
+							<option value=">=">大于等于</option>
+							<option value="<=">小于等于</option>
+							<option value="null">为空</option> 
+							<option value="notnull">不为空</option>
+							<option value="like%">开头</option>
+							<option value="%like">结尾</option>    
+							<option value="%like%">包含</option>
+							<option value="in">in</option>
+							<option value="notin">not in</option>
+						</select>
+					</td>
+					<td class="title col-con" width="35%" nowrap="nowrap">
+						<!--根据选择的字段动态生成-->
+						<input type="text" value="" class="convalue form-input pct100 ">
+						<input type="hidden" value="" class="conkey form-input ">
+
+					</td>
+					<td class="title col-logic" width="15%" nowrap="nowrap">
+						<!--根据选择的字段动态生成-->
+						<select name="logic" class="logic  pct100 ">
+							<option value="and">并且</option>
+							<option value="or">或者</option>
+						</select>
+					</td>
+					<td class="col-oper title" width="5%" nowrap="nowrap">
+						<div class="action-buttons  text-center ptc100">
+							<a class="blue" href="javascript:" onclick="add_row(this)"><i class="ace-icon fa fa-mail-forward fa-rotate-180 bigger-130"></i></a>
+							<a class="red" href="javascript:" onclick="delete_row(this)"><i class="ace-icon fa fa-close bigger-140"></i></a></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+	{/block} {block name="footer"}
+	<script type="text/javascript">
+
+	//管理收藏
+	$("#btnEdit").on("click",function(){
+				$.modalOpen({
+			type:'post',
+			title: '管理收藏',
+			width: "800px",
+			height: "600px",
+			url: '{:url("advsearch_list")}?uikey={$uikey}',
+			btn: [  '关闭'],
+			callBack: function(idx) {
+				var win = $.modalWindow(idx);
+			
+				 $.modalClose(idx);
+				 $.reload();
+            }
+         });
+	});
+	//加入收藏
+	$("#btnAdd").on("click",function(){
+		$.modalOpen({
+			type:'post',
+			title: '搜索条件另存为',
+			width: "800px",
+			height: "600px",
+			url: '{:url("create")}',
+			callBack: function(idx) {
+				var win = $.modalWindow(idx);
+                var returnData = win.returnData(); // 获取弹窗中返回的数据
+                if(returnData){
+                window.setTimeout(function() {
+                                           save_advsearch(returnData);       //执行回调 ，
+                                             },100);
+                $.modalClose(idx); //关闭弹窗   
+                } 
+            }
+         });
+	});
+
+    //保存收藏
+    function save_advsearch(data,idx)
+    {	
+    	var uikey="{:input('uikey')}";
+        if(!check_sql_list()) {return false;}
+
+        var list= get_sql_list(); //将数组以逗号拼接
+        var paramData={items:list,ispub:data['ispub'],title:data['title'],uikey:uikey };
+        $.ajaxSubmitForm({
+			url: "{:url('save2')}",
+			param: paramData,
+			close:false,
+			success: function(data) {
+					try{
+						var url=def_url+"&id="+ data.id;  
+		 					window.location=url;
+					}catch(e){}
+				}
+		});
+    }
+
+//字段配置信息
+var fieldlist={$fieldlist};
+fieldlist['(']={"fieldname":"(","datatype":")","fieldtitle":"(","inputtype":"(","inputdata":"","textname":"","valuename":""};
+fieldlist[')']={"fieldname":")","datatype":")","fieldtitle":")","inputtype":")","inputdata":"","textname":"","valuename":""};
+//选中的收藏条件的明细
+var init_rows="{$items}";	
+//var init_rows="realname=111andsex=1anddeptid=公明派出所1160and"; //test
+
+ //自动增长的ID
+ var auto_id=0; 
+ var storekey="advsearch_{:input('uikey')}";
+ var def_url="{:url('index' )}?uikey={$uikey}&action={$action}";
+ $(function(){
+ 	$("#fav_select").on("change",function(){
+ 		var url=def_url+"&id="+ $(this).val();  
+ 		 window.location=url;
+ 	})
+     //每次改变字段，相应改变后面的比较方式和比较条件 。 
+     $(document).on("change","select.fieldname",function(){
+     	var tr=$(this).parents('tr:first');
+     	var id=tr.data('id');
+     	var k= $(this).val();
+     	var datatype=fieldlist[k].datatype;
+     	var inputtype=fieldlist[k].inputtype;
+     	var inputdata=fieldlist[k].inputdata;
+     	var textname=fieldlist[k].textname;
+     	var valuename=fieldlist[k].valuename;
+     	tr.data('fieldname',k);   //把当前选择的字段名记录tr中
+     	//准备compare select 
+     	str=get_compare_select(datatype);
+     	tr.find('td.col-comptype').html(str);
+     	logicstr=get_logic_select(k);
+     	if(k=='(' ) //左右括号 清空比较方式，条件值以及逻辑值
+     	{
+     		tr.find('td.col-comptype,td.col-con,td.col-logic').html('');
+     	}
+     	if (k==')')  //右括只要逻辑值
+     	{
+     		tr.find('td.col-comptype,td.col-con').html('');
+     	}
+        //选择了1个字段名，触发比较方式select ， 生成相应的条件值和逻辑值输入框
+        tr.find('select.comptype').trigger('change');
+        tr.find('td.col-logic').html(logicstr);
+    });
+
+
+     //每次改变搜索条件，相应的改变条件 输入框 。 
+     $(document).on("change","select.comptype",function(){
+     	var comptype= $(this).val();
+     	var tr=$(this).parents('tr:first');
+     	var id=tr.data('id');
+     	var fieldname= tr.data('fieldname');
+     	var inputtype=fieldlist[fieldname].inputtype;
+     	var str=get_convalue(comptype, fieldname,id);
+     	tr.find('td.col-con').html(str);
+        //条件 输入框为日期类型或时间类型，绑定日期控件
+        if(inputtype=='date'||inputtype=='datetime')  
+        {
+        	var dtype=$('#convalue'+id).data("datetype");
+        	laydate.render({
+              elem: '#convalue'+id, //指定日期输入元素
+              type: dtype,  //控件选择类型 见laydate文档
+              eventElem: '#for_convalue'+id,  //点击触发的元素  
+              trigger: 'click' 
+          });
+        }
+
+    });
+
+
+     //将后台定义的字段列表，初始化到模板行中 __id__ 是占位符，由自动增长的auto_id替代
+     var html='<select name="fieldname" class="fieldname  pct100 " data-id="__id__" id="fieldname__id__">';
+     for(var k in fieldlist){
+     	html+='<option value="'+fieldlist[k].fieldname+'" >'+fieldlist[k].fieldtitle+'</option>';	
+     }
+     html+='</select>';
+    //加入模板行的第一列
+    $(".table-tpl .col-fieldname").html(html); 
+
+    if(init_rows=="")
+    {    
+    	init_rows=localStorage.getItem(storekey );
+    }
+    if(init_rows)
+    {  
+    	show_items(init_rows);
+    }
+    else
+    {
+       var row= $(".table-tpl").html(); //fieldlist初始化好后， 将模板行的HTML插入条件列表。
+	    row=tools.replace(row,'__id__',++auto_id); //每行生成不同的id
+	    $(".table-list").append(row);
+	    //根据select(fieldname)的id 触发onchange事件
+	    $("#fieldname"+auto_id).trigger('change'); 
+	} 
+});
+
+//将前一次保存的或收藏的条件项显示为列表，rowsstr是拼接的字符串。
+ function show_items(rowsstr)
+ {
+   // fieldname | comptype | context| convalue| logic
+   var CS = String.fromCharCode(1);
+   var RS = String.fromCharCode(2);
+   var list= rowsstr.split(RS) ;//test
+   for (var i = 0; i<list.length; i++) {
+	    var rowhtml= $(".table-tpl").html(); //fieldlist初始化好后， 将模板行的HTML插入条件列表。
+	    rowhtml=tools.replace(rowhtml,'__id__',++auto_id); //每行生成不同的id
+	    $(".table-list").append(rowhtml);
+        
+	    var tr=$(".table-list tr:last");
+
+	    var id=auto_id;
+	    var arow=list[i].split(CS);
+	    var fieldname= arow[0];
+	    var comptype=arow[1];
+	    var context=arow[2];
+	    var convalue=arow[3];
+	    var logic=arow[4];
+	    //生成一条件行，并将items的一行填入。
+	    tr.data("fieldname",fieldname);
+	    tr.find('select.fieldname').val(fieldname);
+	    var  html=get_compare_select(fieldlist[fieldname].datatype);
+	    tr.find(".col-comptype").html( html);
+	    tr.find('select.comptype').val(comptype);
+	    html=get_convalue(comptype,fieldname,id);
+	    tr.find(".col-con").html(html);
+	    tr.find("input.context").val(context);
+	    tr.find("input.convalue").val(convalue);
+	    tr.find("select.convalue").val(convalue);
+        //条件 输入框为日期类型或时间类型，绑定日期控件
+        var inputtype=fieldlist[fieldname].inputtype;
+        if(inputtype=='date'||inputtype=='datetime')  
+        {
+        	var dtype=$('#convalue'+id).data("datetype");
+        	laydate.render({
+              elem: '#convalue'+id, //指定日期输入元素
+              type: dtype,  //控件选择类型 见laydate文档
+              eventElem: '#for_convalue'+id,  //点击触发的元素  
+              trigger: 'click' 
+          });
+        }
+
+
+	    html=get_logic_select(fieldname);
+	    tr.find(".col-logic").html(html);
+	    tr.find("select.logic").val(logic);
+    }
+}
+
+//生成条件输入域 的HTML，根据不同类型生成相应的输入方式
+function get_convalue(comptype,fieldname,id)
+{
+	var k=fieldname;
+	var inputtype=fieldlist[k].inputtype;
+	var inputdata=fieldlist[k].inputdata;
+	var textname=fieldlist[k].textname;
+	var valuename=fieldlist[k].valuename;
+
+	var html='';
+	switch (inputtype)
+	{
+		case "input": 
+		html+='<input type="text" name="convalue"   value="" class="convalue form-input  pct100 " />';
+		break;
+		case "select":
+		html+='<select class="convalue  pct100 " name="convalue">';
+		for(var i=0;i<inputdata.length;i++){
+			html+= '<option value="'+inputdata[i][valuename]+'">'+inputdata[i][textname]+'</option>';
+		}
+		html+='</select>';
+		break;
+		case 'datadlgtable':
+		html+='<div class="input-group">';
+		html+='<input type="hidden" name="convalue" id="convalue'+id+'" class="convalue"/>';
+		html+='<input type="text" name="context" id="context'+id+'"  ally="#convalue'+id+'" ';
+		html+='class="form-control search-query admin_sea context" value="" placeholder="请选择"/>';
+		html+=' <span class="input-group-addon addon-btn no-left-border" id="btnselectconvalue'+id+'"';
+		html+=' onclick="dataDlgTable(\''+inputdata+'\', \'btnselectconvalue'+id+'\', public_DlgCallBack);"';
+		html+='data-dlgreturn="context'+id+'.val()='+textname+';convalue'+id+'.val()='+valuename+'" >';
+		html+='<i class="ace-icon fa fa-check"></i>';
+		html+='</span>';
+		html+='<span class="input-group-addon addon-btn" onclick="clearValue(\'#convalue'+id+',#context'+id+'\');">';
+		html+='<i class="ace-icon fa fa-close"></i>';
+		html+='</span>';
+		html+='</div>';  
+		break;
+		case 'datadlgtree':
+		html+='<div class="input-group">';
+		html+='<input type="hidden" name="convalue" id="convalue'+id+'" class="convalue"/>';
+		html+='<input type="text" name="context" id="context'+id+'" ally="#convalue'+id+'" ';
+		html+='class="form-control search-query admin_sea context"  value="" placeholder="请选择"/>';
+		html+=' <span class="input-group-addon addon-btn no-left-border" id="btnselectconvalue'+id+'"';
+		html+=' onclick="dataDlgTree(\''+inputdata+'\', \'btnselectconvalue'+id+'\', public_DlgCallBack);"';
+		html+='data-dlgreturn="context'+id+'.val()='+textname+';convalue'+id+'.val()='+valuename+'" >';
+		html+='<i class="ace-icon fa fa-check"></i>';
+		html+='</span>';
+		html+='<span class="input-group-addon addon-btn" onclick="clearValue(\'#convalue'+id+',#context'+id+'\');">';
+		html+='<i class="ace-icon fa fa-close"></i>';
+		html+='</span>';
+		html+='</div>';  
+		break;
+
+		case "date":
+		html+='<div class="input-group "><input class="form-control  datepicker convalue  form-input" id="convalue'+id+'" name="convalue" type="text" data-datetype="date"   /><span class="input-group-addon   laydatebtn " id="for_convalue'+id+'"></span></div>';
+		break;
+		case "datetime":
+		html+='<div class="input-group "><input class="form-control  datepicker convalue  form-input" id="convalue'+id+'" name="convalue" type="text" data-datetype="datetime"   /><span class="input-group-addon   laydatebtn " id="for_convalue'+id+'"></span></div>';
+		break;
+		case '(':
+		case ')':
+		html='';
+		break;
+	}
+	if(comptype=='null'||comptype=='notnull')
+	{
+		html='';
+	}
+	return html;
+}
+//生成comptype select 的HTML
+function get_compare_select(datatype)
+{
+	html='<select name="comptype" class="comptype  pct100 ">';
+	html+='<option value="=">等于</option>';
+	html+='<option value="!=">不等于</option>';
+	switch (datatype)
+	{
+		case "varchar":
+		html+='<option value="null">为空</option>';
+		html+='<option value="notnull">不为空</option>';
+		html+='<option value="like%">开头</option>';
+		html+='<option value="%like">结尾</option>';
+		html+='<option value="%like%">包含</option>';
+		html+='<option value="in">in</option>';
+		html+='<option value="notin">not in</option>';
+		break;
+		case "int":
+		case "decimal":
+		html+='<option value=">">大于</option>';
+		html+='<option value="<">小于</option>';
+		html+='<option value=">=">大于等于</option>';
+		html+='<option value="<=">小于等于</option>';
+		html+='<option value="null">为空</option>';
+		html+='<option value="notnull">不为空</option>';
+		html+='<option value="in">in</option>';
+		html+='<option value="notin">not in</option>';
+		break;
+		case "date":
+		case "datetime":
+		html+='<option value=">">大于</option>';
+		html+='<option value="<">小于</option>';
+		html+='<option value=">=">大于等于</option>';
+		html+='<option value="<=">小于等于</option>';
+		html+='<option value="null">为空</option>';
+		html+='<option value="notnull">不为空</option>';
+		break;
+		case "(":
+		case ")":
+		html='';
+		break;
+	}
+	if(html)
+	{
+		html+='</select>';
+	}
+	return html;
+}
+
+//生成LOGIC 逻辑条件select 的HTML
+
+function get_logic_select(fieldname)
+{
+	html='<select name="logic" class="logic pct100  ">';
+	html+='<option value="and">并且</option>';
+	html+='<option value="or">或者</option></select>';
+	if(fieldname=='(')
+	{
+		html='';
+	}
+	return html;
+}
+
+//每行后面的插入和删除按钮
+function add_row(obj){   //在当前的后面插入一行
+	var row= $(".table-tpl").html();
+	row=tools.replace(row,'__id__',++auto_id);
+	$(obj).parents("tr:first").after(row);
+	$("#fieldname"+auto_id).trigger('change'); 
+}
+
+function delete_row(obj){  //删除当前行
+	rowcount=$('.table-list tr').length ;
+	//最后一行不能删除 。
+	if(rowcount==1){
+		return;
+	}
+	else{
+		$(obj).parents("tr:first").remove();
+	}
+}
+
+//获取当前配置的SQL列表
+function get_sql_list(){   //获取查询列表
+	var CS = String.fromCharCode(1);
+	var RS = String.fromCharCode(2);
+	var row='';
+	var list='';
+	$("table.table-list tr").each(function(){
+		var fieldname=$(this).find(".fieldname").val();
+		var comptype=$(this).find(".comptype").val()||'';
+		var context=$(this).find(".context").val()||'';
+		var convalue=$(this).find(".convalue").val()||'';
+		var logic=$(this).find(".logic").val()||'';
+		row=fieldname+CS+comptype+CS+context+CS+convalue+CS+logic+RS;
+		list+=row;
+	})
+	list=tools.trim(list,RS);
+	return list;
+}
+
+//检查SQL条件配置的合法性
+function check_sql_list()
+{		var ret=true;	
+	    var arrLeft=[];
+        var lastR=-2;
+        var lastL=-2;
+        var i=0;
+        $(".table-list tr").each(function() {
+            fieldname = $(this).find(".fieldname").val();
+            if (fieldname == "(") { 
+            	arrLeft.push(i); 
+            	lastL=i;
+            }
+            if (fieldname == ")") {  
+            	if(arrLeft.length==0)
+            	{
+            		$.modalAlert("左、右括号不匹配!"); ret=false;return false;
+            	}
+            	arrLeft.pop();  
+            	lastR=i;
+            	if(lastL+1==lastR)
+            	{ 
+            		$.modalAlert("左右括号中不能为空!");ret=false; return false;
+            	}
+            }
+            i++; 
+        });
+        
+        if(ret&& arrLeft.length>0){
+        	 $.modalAlert("左、右括号不匹配!"); ret=false;return false;
+        }
+	return ret;
+}
+
+ 
+
+//把设置好的SQL条件拼装为字符串返回给业务列表界面。 
+//如果设置不合格，则返回false,返回前将内容存入localstorage
+function retrunData() {
+	if(!check_sql_list()) {
+		
+		return false;
+	}
+	var sqllist=get_sql_list();
+	//返回前将内容存入localstorage
+	localStorage.setItem(storekey , sqllist);
+	return sqllist;
+}
+
+</script>
+{/block}

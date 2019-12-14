@@ -1,0 +1,178 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="main_content"}
+<div class="alert   alert-info">
+    <button type="button" class="close" data-dismiss="alert">
+        <i class="ace-icon fa fa-times"></i>
+    </button>
+    当前权限路径: {$actionpath}  ， 已授权以下角色。
+</div>
+
+<div class="buttonArea">
+    <div class="btn-group">
+        <button class="fa fa-minus-circle fa-lg btn btn-primary" id="removeRole" type="button">移除角色</button>
+    </div>
+    <div class="btn-group">
+        <button class="fa fa-plus-circle   fa-lg btn btn-primary" id="addRole" type="button">加入角色</button>
+    </div>
+    <div class="searchArea pull-right col-md-5 col-xs-5">
+        <div class="fastSearch row">
+            <div class="input-group ">
+                <input type="text" name="keyword" id="keyword" class="form-control search-query admin_sea" value="" placeholder="输入关键字"/>
+                <span class="input-group-btn">
+                    <button class="fa fa-search fa-lg btn  btn-myset  " type="button" id="btnSearch">搜索</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="contentArea">
+   <table id="gridTable"></table>
+   <div id="gridPager"></div>
+</div>
+
+{/block}
+{block name="footer"}
+<script type="text/javascript">
+ var gridSelector = "#gridTable";
+    jQuery(function () {
+    var pagerSelector = "#gridPager";
+        var parent_column = $(gridSelector).closest('[class*="col-"]');
+        $(window).on('resize.jqGrid',
+                function () {
+                    $(gridSelector).jqGrid('setGridWidth', parent_column.width());
+                    $(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+                });
+
+        //resize on sidebar collapse/expand
+        $(document).on('settings.ace.jqGrid',
+                function (ev, event_name, collapsed) {
+                    if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                        //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                        setTimeout(function () {
+                                    $(gridSelector).jqGrid('setGridWidth', parent_column.width());
+                                    $(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+                                },
+                                20);
+                    }
+                });
+
+        var postdata = $('.searchArea').formSerialize(); //收集搜索条件
+        var windowHeight = $(window).height();
+        var rowNum = windowHeight < 800 ? 10 : 20;    // window区域大于800，则默认20行一页， 否则10行。
+        $(gridSelector)
+            .jqGrid({
+                // caption: "用户列表",
+                url: "{:url('assignrole_json',['actionid'=>input('actionid')])}",
+                mtype: 'POST', //默认是GET
+                datatype: "json", //默认xml
+                height: 'auto', //表格高度
+                shrinkToFit: true, //拉伸列宽自动填满表格宽度
+                autoScroll: true, //是否自动横向滚动条
+                postData: postdata, //   发送的搜索条件数据
+                colModel: [
+                    { label: 'id', name: 'id', index: 'id', width: 70, sortable: false, hidden: true, key: true },
+                    { label: '角色名称', name: 'rolename', index: 'rolename', width: 170 , sortable: false,  },
+                    { label: '说明', name: 'roledesc', index: 'roledesc', width: 170  , sortable: false, },
+                ],
+                viewrecords: true, //显示总记录数
+                rowNum: rowNum, //默认每页记录数
+                rowList: [10, 20, 30, 50, 100],
+                pager: pagerSelector, //翻页容器
+                altRows: true, //隔行换色
+                autoWidth: true, //表格自动宽度
+                multiselect: true, //是否可多选
+                multiboxonly: true, // 只能勾选checkbox多选
+                loadComplete: function() { //每次载入数据后回调
+            //美化checkbox
+            $(this).JQchkCss();
+            
+            //更新分页图标
+            setTimeout(function() { updatePagerIcons(pagerSelector); }, 0);
+        }
+
+        });
+        //触发window.resize，重调jqGrid大小避免初始化表格预留滚动条位置
+        setTimeout(function() { $(window).triggerHandler('resize.jqGrid') }, 100);
+
+        //搜索
+        $("#btnSearch")
+                .click(function() {
+                     //jqgrid的方法 setGridParam方法会累加postdata的项,所以赋值前， 要先清空原有的项
+                    var postData = $(gridSelector).jqGrid("getGridParam", "postData");  
+                       $.each(postData, function (k, v) {  
+                           delete postData[k];  
+                       }); 
+
+                    $(gridSelector)
+                            .jqGrid('setGridParam',
+                                    {
+                                        postData: $('.searchArea').formSerialize(), //收集搜索条件
+                                        page: 1 //搜索时，重定位到第一页
+                                    })
+                            .trigger("reloadGrid"); //重新载入
+                });
+        $("#addRole")
+                .click(function() {
+                    $.modalOpen({
+                        title: '请选择要加入的角色',
+                        btn: ['确定','关闭' ],
+                        width: "960px",
+                        height: "850px",
+                        url: '{:url("admin/tools/selectrole")}?ismulti=true',
+                        callBack: function(idx) {
+                            var win = $.modalWindow(idx);     //弹窗中的windows
+                            returnData = win.returnData(); // 获取弹窗中返回的数据
+                            if (!returnData) return false;
+                            addrole(returnData,idx );       //执行回调 ，
+                        }
+                    });
+                });
+        $("#removeRole")
+                .click(function() {
+                    var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    if (ar_ids.length === 0) {
+                        $.modalAlert("请勾选要移除的记录");
+                        return false;
+                    }
+                    var paramData = { ids: ar_ids.join(',') }; //将数组以逗号拼接
+                    $.ajaxConfirm({
+                        url: '{:url("removerole")}?actionid={:input("actionid")}',
+                        prompt:'确定要收回这些角色的权限吗？',
+                        param: paramData,
+                        success: function() {
+                            //删除成功或者失败在公共ajaxConfirm函数中处理 （还需要测试）
+                            //刷新list
+                            reloadGrid();
+                        }
+                    });
+                });
+
+                //提供给弹窗的回调方法，用于刷新当前条件下的JQgrid中的数据。
+    function reloadGrid() {
+        $(gridSelector).trigger("reloadGrid");
+    }
+
+    //将选择的角色授权当前权限
+   function addrole(data,idx)
+        {
+            var ids=$.projoin(data,'id');
+            var paramData = { ids:ids,actionid:{:input('actionid')} }; //将数组以逗号拼接
+            $.ajaxConfirm({
+                url: '{:url("addrole")}',
+                prompt:"确定要向选中的角色授权吗？",
+                param: paramData,
+                success: function() {
+                    reloadGrid();
+                    $.modalClose(idx);
+                }
+            });
+        }
+        
+        });
+
+ 
+
+
+</script>
+{/block}

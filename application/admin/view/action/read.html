@@ -1,0 +1,102 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+  
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">权限代码
+						</td>
+						<td  class="field" width="35%">
+						{$data.actcode}
+							
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">权限名称
+						</td>
+						<td  class="field" width="35%">
+						{$data.actname}
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">上级菜单
+						</td>
+						<td  class="field" width="35%">
+						{$pname}
+							
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">排序号
+						</td>
+						<td  class="field" width="35%">
+						{$data.sortno}
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">是否目录
+						</td>
+						<td  class="field" width="35%">
+			
+							{eq name="$data.isdir" value="1"}是{/eq} 
+							{eq name="$data.isdir" value="0"}否{/eq} 
+					
+							
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">是否菜单
+						</td>
+						<td  class="field" width="35%">
+				
+							{eq name="$data.isdir" value="1"}是{/eq} 
+							{eq name="$data.isdir" value="0"}否{/eq} 
+			
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">页面名称
+						</td>
+						<td  class="field" width="35%">
+		
+							{$data.menutext}
+				
+							
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">链接地址
+						</td>
+						<td  class="field" width="35%">
+					
+							{$data.menuurl}
+					
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">打开链接目标
+						</td>
+						<td  class="field" width="35%">
+					
+							{$data.menutarget}
+					
+							
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">菜单样式
+						</td>
+						<td  class="field" width="35%">
+					
+							{$data.menuclass}
+					
+						</td>
+					</tr>
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">备注
+						</td>
+						<td  class="field" width="35%" colspan="3">
+					
+							{$data.remark}
+					
+							
+						
+					</tr>
+ 
+				</table>
+   
+{/block}

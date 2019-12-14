@@ -1,0 +1,201 @@
+{extend name="application/common/view/form.html" /}
+{block name="title"}useradd{/block}
+{block name="header"}
+<link href="__ADMIN__/js/select2/select2.min.css" rel="stylesheet"/>
+    <script src="__ADMIN__/js/select2/select2.min.js"></script> 
+     <link href="__ADMIN__/ACE/components/bootstrap-duallistbox/dist/bootstrap-duallistbox.min.css" rel="stylesheet" />
+    <script src="__ADMIN__/ACE/components/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.js"></script>
+{/block} 
+{block name="main_content"}
+
+  
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap"><span class="red">*</span>姓名
+						</td>
+						<td  class="field" width="35%">
+							<div class="input-group pull-left">
+								<input class=" required   " id="realname" name="realname" type="text" value="{$data.realname}"//>
+							</div>
+							<span class="helping"></span>
+
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">性别
+						</td>
+						<td  class="field" width="35%">
+							<div class="input-group pull-left">
+								{tag:select type="dict" name="sex" dict="sex"  selectVal="data['sex']"}
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="title"><span class="red">*</span>登录名称</td>
+						<td class="field">
+							<div class="input-group pull-left">
+								<input class="" id="loginid" name="loginid" class="required" type="text" value="{$data.loginid}" />
+							</div>
+							<span class="helping"></span>
+						</td>
+						<td class="title">
+							默认角色
+						</td>
+						<td class="field" >
+							<div class="input-group pull-left">
+								{tag:select name="defaultrole" type="data" data="roles" datakey="id" dataval="rolename" selectVal="data['defaultrole']"/}
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>			
+					<tr>
+						<td  class="title"   nowrap="nowrap">身份证号码
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class="" id="idno" name="idno" type="text" value="{$data.idno}"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+						<td  class="title"   nowrap="nowrap">固定电话
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class="" id="tel" name="tel" type="text" value="{$data.tel}"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">手机
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class="" id="mobile" name="mobile" type="text" value="{$data.mobile}"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+						<td  class="title"   nowrap="nowrap">邮箱
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class="" id="email" name="email" type="text" value="{$data.email}"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+					</tr>
+					<tr >
+						<td class="title"><span class="red">*</span>所在单位</td>
+						<td class="field" width="33%">
+							
+								<div class="input-group pull-left">
+									<input id="deptid" class="required" name="deptid" type="hidden" value="{$data.deptid}"/>
+									<input type="text" name="deptname" id="deptname" class="form-control search-query admin_sea "  placeholder="请选择单位" readonly="readonly" value="{$deptname}"  ally="#deptid"/>
+									<span class="input-group-addon  addon-btn no-left-border" id="deptid_selectBtn" onclick="dataDlgTree('selectdept', 'deptid_selectBtn',public_DlgCallBack);" data-dlgreturn="deptid.val()=id;deptname.val()=deptname" data-dlgcallback="">
+					                    <i class="ace-icon fa fa-check"></i>
+					                </span>
+									<span class="input-group-addon  addon-btn" onclick="clearValue('#deptid,#deptname');">
+					                    <i class="ace-icon fa fa-close"></i>
+					                </span>
+								</div>
+						</td>
+						<td class="title">可登录IP</td>
+						<td class="field"  >
+							<div class="input-group pull-left">
+								<textarea class="col-md-6" id="iprange" name="iprange" >{$data.iprange}</textarea>
+								<span class="help-inline"><span class="middle">每个IP或IP段一行</span></span>
+							</div>
+							<span class="helping"> </span>
+						</td>
+
+
+					</tr>
+
+					<tr>
+						<td class="title">
+							指派角色
+						</td>
+						<td class="field" colspan="3">
+							<div class="input-group pull-left">
+								{$assignrole}
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+				
+
+					<tr>
+						<td class="title"><span class="red">*</span>排序号</td>
+						<td class="field">
+							<div class="input-group pull-left">
+								<input class=" required" id="sortno" name="sortno" type="number" value="{$data.sortno}"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+						<td class="title">UkeyID</td>
+						<td class="field">
+							<div class="input-group pull-left">
+								<input class="" id="ukeyid" name="ukeyid" type="text" value="{$data.ukeyid}"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+							
+
+					</tr>
+
+				</table>
+
+
+  
+{/block}
+{block name="footer"}
+
+<script type="text/javascript">
+	jQuery(function($) {
+		var dbox = $('#assignrole')
+				.bootstrapDualListbox({
+					filterTextClear: '全部显示',
+					infoText: '可选 {0}',
+					infoRText: '已选 {0}',//右侧有数据时
+					filterPlaceHolder: '过滤',
+					infoTextEmpty: '可选0',
+					infoRTextEmpty:'已选0',//右侧为空时
+					moveAllLabel:'选择所有',
+					removeAllLabel:'移除所有',
+					infoTextFiltered:'<span class="label label-warning">找到 {0} 个</span>',
+				});
+		var dboxcontainer = dbox.bootstrapDualListbox('getContainer');
+		dboxcontainer.find('.btn').addClass('btn-white btn-info btn-bold');
+	});
+	$(".bootstrap-duallistbox-container .col-md-6").addClass("col-sm-6 col-xs-6"); //多列选择添加小屏幕样式
+</script>
+
+<script type="text/javascript">
+	 
+
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		//实现连续输入的标识
+		var iscontinue = true;
+		if (postData.iscontinue) {
+			iscontinue=false;
+		}
+		$.ajaxSubmitForm({
+			url: "{:url('update')}?id={:input('id')}",
+			param: postData,
+			close:iscontinue,
+			success: function(data) {
+				try{
+					cb(data);
+				}catch(e){}
+			}
+		});
+	};
+</script>
+{/block}

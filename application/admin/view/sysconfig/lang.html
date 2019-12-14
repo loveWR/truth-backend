@@ -1,0 +1,94 @@
+{extend name="application/common/view/list.html" /}
+{block name="header"}
+<script  src="__ADMIN__/js/webuploader/webuploader.js"></script>
+    <link  href="__ADMIN__/ACE/components/jquery-colorbox/colorbox.min.css" rel="stylesheet" />
+    <script src="__ADMIN__/ACE/components/jquery-colorbox/jquery.colorbox.js"></script>
+    <script src="__ADMIN__/js/attfile/imageList.js"></script>
+    <script src="__ADMIN__/js/jQueryRotate.js"></script>
+    <script src="__ADMIN__/js/Sortable-master/Sortable.js"></script>
+    <!-- 图片剪切 -->
+    <link rel="stylesheet" href="__ADMIN__/js/cropper/cropper.css" />
+    <script src="__ADMIN__/js/cropper/cropper.js"></script>
+    <script src="__ADMIN__/js/cropper/main.js"></script>
+    <!-- 附件列表 -->
+    <link href="__ADMIN__/js/attfile/css/attFileList.css" rel="stylesheet" />
+    <script src="__ADMIN__/js/attfile/attFileList.js"></script>
+    <script src="__ADMIN__/js/jquery-validate/jquery.validate.min.js"></script>
+{/block}
+{block name="main_content"}
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal validate" role="form" id="form1" method="post" >
+                            {:token('__token__'.getGUID(), 'sha1')}
+                                    <table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+                                        <tr>
+                                            <td  class="title" width="20%" nowrap="nowrap">是否启用多语言
+                                            </td>
+                                            <td  class="field" width="80%">
+                                               <label>
+                                                    <input name="is_multilang" type="radio" class="ace" value="1"  {eq name="$sysconfig.is_multilang" value="1" } checked="checked" {/eq} > 
+                                                    <span class="lbl">启用多语言</span>
+                                                </label>
+                                                <label>
+                                                    <input name="is_multilang" type="radio" class="ace"  value="2"  {eq name="$sysconfig.is_multilang" value="2" } checked="checked" {/eq}>
+                                                    <span class="lbl">启用单语言</span>
+                                                </label>
+                                               
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="title" width="15%" nowrap="nowrap">前台默认语言
+                                            </td>
+                                            <td  class="field" width="35%">
+                                               <label>
+                                                    <input name="home_lang" type="radio" class="ace" value="1"  {eq name="$sysconfig.home_lang" value="1" } checked="checked" {/eq} > 
+                                                    <span class="lbl">简体中文</span>
+                                                </label>
+                                                <label>
+                                                    <input name="home_lang" type="radio" class="ace"  value="2"  {eq name="$sysconfig.home_lang" value="2" } checked="checked" {/eq}>
+                                                    <span class="lbl">英语</span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        
+
+                                    </table>
+                                     <div class="text-center buttonArea">
+                                    	<button class="fa fa-save green larger fa-lg btn btn-primary" id="submit" type="button">保存配置</button>
+                                    </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{/block}
+{block name="footer"}
+<script>
+    $(function(){
+        imagePicker('#filePicker1','#img1','#web_logo',false);
+        $("#submit").click(function () {
+                    if (!$('#form1').valid()) {
+                        try {
+                            $(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+                        } catch (e) {
+                        }
+                        return false;
+                    }
+                    var postData = $("#form1").formSerialize(); 
+                    $.ajaxSubmitForm({
+                        url: "{:url('save')}?configgroup=3",//配置分类
+                        param: postData,
+                        success: function(data) {
+                            location.reload();
+                        }
+                    });
+                });
+    })
+</script>
+{/block}

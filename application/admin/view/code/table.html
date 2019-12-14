@@ -1,0 +1,231 @@
+{extend name="application/common/view/blank.html" /}
+{block name="main_content"}
+ 
+            <!-- PAGE CONTENT BEGINS -->
+           
+            <div class="buttonArea">
+            {if haveAction('admin/code/create')}
+                <button class="fa fa-plus-square green larger fa-lg btn btn-primary" id="btnAdd" type="button"  >新增</button>
+           {/if}
+           {if haveAction('admin/code/edit')}
+                <button class="fa fa-edit green larger fa-lg btn btn-info" id="btnEdit" type="button" >修改</button>
+            {/if}
+            {if haveAction('admin/code/delete')}
+                <button class="fa fa-trash-o red fa-lg btn btn-danger" id="btnDelete" type="button" >删除</button>
+            {/if}
+                <button class="fa fa-file-text-o fa-lg btn  btn-success" id="btnRead" type="button">查看</button>
+                <button class="fa fa-refresh fa-lg btn btn-yellow" id="btnReload" type="button">刷新</button>
+                <div class="searchArea pull-right col-md-3  ">
+                   <div class="fastSearch row">
+                        <div class="input-group ">
+                         <input type="text" name="keyword" id="keyword"   class="form-control search-query admin_sea" value="" placeholder="输入关键字" />
+                         <span class="input-group-btn">
+                            <button class="fa fa-search fa-lg btn  btn-myset"  type="button" id="btnSearch">搜索</button>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="clearfix"></div>
+            <table id="gridTable" class="autowidth "></table>
+            <div id="gridPager"></div>
+            <!-- PAGE CONTENT ENDS -->
+   
+<!-- /.page-content -->
+{/block}
+{block name="footer"}
+<script type="text/javascript">
+    var rows=[];
+    var gridSelector = "#gridTable";
+    jQuery(function() {
+        var pagerSelector = "#gridPager";
+        var parent_column = $(gridSelector).closest('[class*="col-"]');
+        $(window).on('resize.jqGrid',
+                        function () {
+                            $(gridSelector).jqGrid('setGridWidth', parent_column.width());
+                            $(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+                        });
+
+        //resize on sidebar collapse/expand
+        $(document).on('settings.ace.jqGrid',
+                        function (ev, event_name, collapsed) {
+                            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                                setTimeout(function () {
+                                            $(gridSelector).jqGrid('setGridWidth', parent_column.width());
+                                            $(gridSelector + " tr.jqgfirstrow td:first").width(28); //fixbug
+                                        },
+                                        20);
+                            }
+                        });
+
+        var postdata = $('.searchArea').formSerialize(); //收集搜索条件
+        var windowHeight = $(window).height();
+        var rowNum = windowHeight<800?10:20;                 // window区域大于800，则默认20行一页， 否则10行。
+        $(gridSelector)
+                .jqGrid({
+                    // caption: "用户列表",
+                    url: "{:url('table_json')}?typeid={:input('typeid')}",
+                    mtype: 'POST', //默认是GET
+                    datatype: "json", //默认xml
+                    height: 'auto', //表格高度
+                    shrinkToFit: true, //拉伸列宽自动填满表格宽度
+                    autoScroll: true, //是否自动横向滚动条
+                    postData: postdata, //   发送的搜索条件数据
+                    colModel:[
+                        { label: 'id', name: 'id', index: 'id', width: 70, sortable: true, hidden: true, key:true },
+                        { label: '代码', name: 'code', index: 'code', width: 70, sortable: true,
+                        formatter:function (value,Obj) {
+                        var id=Obj.rowId;
+                        return '<a href="javascript:"  class="read"  onclick="read('+id+')" >'+value+'</a>';}
+                         },
+                        { label: '代码名称', name: 'codename', index: 'codename', width: 70, sortable: false },
+                        { label: '代码名称简称', name: 'sortname', index: 'sortname', width: 70, sortable: false },
+                        { label: '助记码', name: 'mnemonic', index: 'mnemonic', width: 70, sortable: false },
+                        { label: '排序码', name: 'sortno', index: 'sortno', width: 70, sortable: false },
+                        { label: '是否为系统代码', name: 'issystem', index: 'issystem', width: 70, sortable: false },
+                        { label: '别名1', name: 'alias1', index: 'alias1', width: 70, sortable: false },
+                        { label: '别名2', name: 'alias2', index: 'alias2', width: 70, sortable: false }
+                    ] ,
+                    sortname:'id',
+                    sortorder:'desc',
+                    viewrecords: true, //显示总记录数
+                    rowNum: rowNum, //默认每页记录数
+                    rowList: [10, 20, 30, 50, 100],
+                    pager: pagerSelector, //翻页容器
+                    altRows: true, //隔行换色
+                    autoWidth: true, //表格自动宽度
+                    multiselect: true, //是否可多选
+                    multiboxonly: true, // 只能勾选checkbox多选
+                    loadComplete: function () { //每次载入数据后回调
+                        //美化checkbox
+                        $(this).JQchkCss();
+                        
+                        //点击查看链接，选中当前行
+                        $(this).on("click", "a.read", function () {
+                            $(this).parent().trigger("click");
+                        });
+                        //更新分页图标
+                        setTimeout(function () {
+                            updatePagerIcons(pagerSelector);
+                        }, 0);
+                    }
+                });
+        //触发window.resize，重调jqGrid大小避免初始化表格预留滚动条位置
+        setTimeout(function(){$(window).triggerHandler('resize.jqGrid')},100)
+        
+
+        //搜索
+        $("#btnSearch")
+                .click(function() {
+                     //jqgrid的方法 setGridParam方法会累加postdata的项,所以赋值前， 要先清空原有的项
+                    var postData = $(gridSelector).jqGrid("getGridParam", "postData");  
+                       $.each(postData, function (k, v) {  
+                           delete postData[k];  
+                       }); 
+
+                    $(gridSelector)
+                            .jqGrid('setGridParam',
+                                    {
+                                        postData: $('.searchArea').formSerialize(), //收集搜索条件
+                                        page: 1 //搜索时，重定位到第一页
+                                    })
+                            .trigger("reloadGrid"); //重新载入
+                });
+
+     
+        //新增
+        $("#btnAdd")
+                .click(function() {
+                    $.modalOpen({
+                        title: '新增数据字典',
+                        btn: ['确定','关闭'],
+                        width: "960px",
+                        height: "600px",
+                        url: '{:url("create")}?typeid={:input("typeid")}', //弹出窗口打开的URL
+                        callBack: function(idx) { //确定按钮提交 修改窗口中的保存
+                            var win = $.modalWindow(idx); //取得弹出窗口
+                            win.submitForm(reloadGrid ); //提交弹出窗口的保存按钮,并通过回调 reloadGrid 刷新本页面JQgrid
+                        }
+                    });
+                });
+        //修改
+        $("#btnEdit")
+                .click(function () {
+                    var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    var id = ar_ids[0];
+                    if (ar_ids.length === 1 && !!id) {
+                        $.modalOpen({
+                            title: '修改数据字典',
+                            btn: ['确定','关闭'],
+                            width: "960px",
+                            height: "600px",
+                            url: '{:url("edit")}?id=' + id+'&typeid={:input("typeid")}',
+                            callBack: function(idx) {
+                                var win = $.modalWindow(idx);
+                                win.submitForm(reloadGrid);
+                            }
+                        });
+                    } else {
+                        $.modalAlert("请选择一条记录");
+                        return false;
+                    }
+                });
+        //删除
+        $("#btnDelete")
+                .click(function() {
+                    var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    if (ar_ids.length === 0) {
+                        $.modalAlert("请勾选要删除的记录");
+                        return false;
+                    }
+                    var paramData = { ids: ar_ids.join(',') }; //将数组以逗号拼接
+                    $.ajaxConfirm({
+                        url: '{:url("delete")}',
+                        param: paramData,
+                        success: function() {
+                            //删除成功或者失败在公共ajaxConfirm函数中处理 （还需要测试）
+                            //刷新list
+                           reloadGrid();
+                        }
+                    });
+                });
+        //查看
+        $("#btnRead")
+                .click(function() {
+                    var ar_ids = $(gridSelector).JQselectIds(); //取得所有被勾选的行的ID，数组形式
+                    var id = ar_ids[0];
+                    if (ar_ids.length === 1 && !!id) {
+                        $.slideOpen({
+                            title: '查看数据字典',
+                            url: '{:url("read")}?id=' + id,
+                            callBack: function(idx) {
+                                $.modalClose(idx);
+                            }
+                        });
+                    } else {
+                        $.modalAlert("请选择一条记录");
+                        return false;
+                    }
+                });
+        //刷新
+        $("#btnReload")
+                .click(function() {
+                    reloadGrid();
+                });
+    });
+
+    //提供给弹窗的回调方法，用于刷新当前条件下的JQgrid中的数据。
+    function reloadGrid() {
+        $(gridSelector).trigger("reloadGrid");
+    }
+        function read(id) {
+            $.slideOpen({
+                title: '查看数据字典',
+                url: '{:url("read")}?id=' + id+'&typeid='+{:input('typeid')}, //弹出窗口打开的URL
+                
+            });
+            return false;
+        }
+</script>
+{/block}

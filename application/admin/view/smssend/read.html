@@ -1,0 +1,90 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}{/block}
+{block name="header"}
+
+
+{/block}
+{block name="main_content"}
+ 
+ 	    			<table cellspacing="1" width="100%" border="0" align="center" class="form-table" style="table-layout:fixed" >
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap">业务表名
+							</td>
+							<td  class="field">
+								{$data.biztable}
+								
+							</td>
+							<td  class="title" width="20%" nowrap="nowrap">业务记录ID
+							</td>
+							<td  class="field">
+								{$data.bizrec_id}
+								
+							</td>
+						</tr>
+
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap">目标手机号码
+							</td>
+							<td  class="field">
+								{$data.tono}
+								
+							</td>
+							<td  class="title" width="20%" nowrap="nowrap">信息内容
+							</td>
+							<td  class="field" style="overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap;">
+								{$data.content}
+						</tr>
+
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap">计划发送时间
+							</td>
+							<td  class="field">
+								{$data.plantime}
+							</td>
+							<td  class="title" width="20%" nowrap="nowrap">实际发送时间
+							</td>
+							<td  class="field">
+								{$data.sendtime}
+							</td>
+						</tr>
+
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap">发送状态
+							</td>
+							<td  class="field">
+								{$data.flag}
+							</td>
+							<td  class="title" width="20%" nowrap="nowrap">操作用户ID
+							</td>
+							<td  class="field">
+								{$data.user_id}
+							</td>
+						</tr>
+
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap">错误信息
+							</td>
+							<td  class="field" style="overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap;" colspan="3">
+								{$data.errmsg}
+							</td>
+
+						</tr>
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap">回复时间
+							</td>
+							<td  class="field">
+								{$data.backtime}
+								
+							</td>
+							<td  class="title" width="20%" nowrap="nowrap">回复内容
+							</td>
+							<td  class="field" width="20%" style="overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap;">
+								{$data.backcontent}
+								 
+							</td>
+						</tr>
+					</table> 
+	    	
+				    <input type="hidden" name="id" value="{:input('id')}">
+				 
+{/block}

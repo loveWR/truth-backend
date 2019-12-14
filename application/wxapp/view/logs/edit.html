@@ -1,0 +1,102 @@
+{extend name="./application/common/view/form.html" /}
+{block name="title"}useradd{/block}
+{block name="header"}
+
+{/block}
+{block name="main_content"}
+<table cellspacing='1' width='100%' border='0' align='center' class='form-table'> 
+<tr>
+					<td class="title"	width="20%" nowrap="nowrap">工作简述
+					</td>
+					<td class="field" width="80%" colspan="0">
+						<div class="input-group pull-left">
+							<input class=" size=''  " id="brief" name="brief"  type="text" value="{$data['brief']}"/>
+	                    </div>
+						<span class="helping"> </span>
+						
+					</td>
+</tr>
+<tr>
+					<td class="title"	width="20%" nowrap="nowrap">员工名字
+					</td>
+					<td class="field" width="80%" colspan="0">
+						<div class="input-group pull-left">
+							<input class=" size=''  " id="userid" name="userid"  type="text" value="{$data['userid']}"/>
+	                    </div>
+						<span class="helping"> </span>
+						
+					</td>
+</tr>
+<tr>
+					<td class="title"	width="20%" nowrap="nowrap">提交日期
+					</td>
+					<td class="field" width="80%" colspan="0">
+						<div class="pull-left input_wrap">
+							<div class="input-group ">
+								<input class="form-control  datepicker size=''  " id="workdate" name="workdate" type="text" data-datetype='date' value="{$data['workdate']}">
+								<span class="input-group-addon   laydatebtn"></span>
+							</div>
+							<span class="helping"> </span>
+						</div>
+
+					</td>
+</tr>
+<tr>
+					<td class="title"	width="20%" nowrap="nowrap">日志内容
+					</td>
+					<td class="field" width="80%" colspan="0">
+						<div class="input-group pull-left">
+							<input class=" size=''  " id="plan" name="plan"  type="text" value="{$data['plan']}"/>
+	                    </div>
+						<span class="helping"> </span>
+						
+					</td>
+</tr>
+<tr>
+					<td class="title"	width="20%" nowrap="nowrap">遇到的问题
+					</td>
+					<td class="field" width="80%" colspan="0">
+						<div class="input-group pull-left">
+							<input class=" size=''  " id="problems" name="problems"  type="text" value="{$data['problems']}"/>
+	                    </div>
+						<span class="helping"> </span>
+						
+					</td>
+</tr>
+<tr>
+					<td class="title"	width="20%" nowrap="nowrap">所属项目
+					</td>
+					<td class="field" width="80%" colspan="0">
+						<div class="input-group pull-left">
+							<input class=" size=''  " id="pid" name="pid"  type="text" value="{$data['pid']}"/>
+	                    </div>
+						<span class="helping"> </span>
+						
+					</td>
+</tr>
+ </table>
+<input type="hidden" name="pid" value="{:input('pid')}">
+{/block}
+{block name="footer"}
+<script type="text/javascript">
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+		var postData = $("#form1").formSerialize();
+		$.ajaxSubmitForm({
+			url: "{:url('update')}?id={:input('id')}",
+			param: postData,
+			success: function(data) {
+				if (cb) {
+					cb(data);
+				}
+			}
+		});
+	};
+</script>
+{/block}

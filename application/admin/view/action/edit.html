@@ -1,0 +1,199 @@
+{extend name="application/common/view/form.html" /}
+{block name="title"}useradd{/block}
+{block name="header"}
+ 
+{/block}
+{block name="main_content"}
+   
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+						<td  class="title" width="15%" nowrap="nowrap">权限代码
+						</td>
+						<td  class="field" width="35%">
+							<div class="input-group pull-left">
+								<input class="required  " id="actcode" name="actcode" type="text" value="{$data.actcode}"/>
+							</div>
+							 <span class="helping"></span>
+					            <font color="red" style="display:none" id="first">页面代码不能重复</font>
+						</td>
+						<td  class="title" width="15%" nowrap="nowrap">权限名称
+						</td>
+						<td  class="field" width="35%">
+							<div class="input-group pull-left">
+   								<input class=" required   " id="actname" name="actname" type="text" value="{$data.actname}"/>
+   							</div>
+   							<span class="helping"></span>
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">上级菜单
+						</td>
+						<td  class="field"    colspan="3">
+								<div class="input-group pull-left" >
+									<input type="hidden" name="pid" id="pid" value="{$data.pid}"/>
+									<input type="text" name="deptid_show" id="deptid_show" class="form-control search-query admin_sea" value="{$pname?:'顶级'}" placeholder="请选择上级" readonly="readonly" ally="#pid"/>
+
+									<span class="input-group-addon addon-btn no-left-border" id="actionid_selectBtn" onclick="dataDlgTree('selectaction', 'actionid_selectBtn', public_DlgCallBack);" data-dlgreturn="deptid_show.val()=actname;pid.val()=id" data-dlgcallback="">
+					                    <i class="ace-icon fa fa-check"></i>
+					                </span>
+									<span class="input-group-addon addon-btn" onclick="clearValue('#pid,#deptid_show');">
+					                    <i class="ace-icon fa fa-close"></i>
+					                </span>
+								</div>
+								<span class="helping"></span>
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">是否目录
+						</td>
+						<td  class="field">
+							<label>
+					            <input name="isdir" type="radio" class="ace" {eq name="$data.isdir" value="1" } checked="checked" {/eq}  value="1">
+					            <span class="lbl">是</span>
+					        </label>
+					        <label>
+					            <input name="isdir" type="radio" class="ace" {eq name="$data.isdir" value="0" } checked="checked" {/eq}  value="0">
+					            <span class="lbl">否</span>
+					        </label>
+						</td>
+						<td  class="title"   nowrap="nowrap">是否菜单
+						</td>
+						<td  class="field">
+							<label>
+					            <input name="ismenu" type="radio" class="ace" {eq name="$data.ismenu" value="1" } checked="checked" {/eq}  value="1">
+					            <span class="lbl">是</span>
+					        </label>
+					        <label>
+					            <input name="ismenu" type="radio" class="ace" {eq name="$data.ismenu" value="0" } checked="checked" {/eq}  value="0">
+					            <span class="lbl">否</span>
+					        </label>
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">页面名称
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class=" required  " id="menutext" name="menutext" type="text" value="{$data.menutext}"/>
+							</div>
+							 <span class="helping"></span>
+						</td>
+						<td  class="title"   nowrap="nowrap">链接地址
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class=" required   " id="menuurl" name="menuurl" type="text" value="{$data.menuurl}"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+
+					<tr>
+						<td  class="title"   nowrap="nowrap">打开链接目标
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class=" " id="menutarget" name="menutarget" type="text" value="{$data.menutarget}"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+						<td  class="title"   nowrap="nowrap">菜单样式
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class="  " id="menuclass" name="menuclass" type="text" value="{$data.menuclass}"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">图标样式
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<!-- <i class="menu-icon fa {$data.iconclass}"></i> -->
+								<input class=" " id="iconclass" name="iconclass" type="text" value="{$data.iconclass}"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+						<td  class="title"   nowrap="nowrap">排序号
+						</td>
+						<td  class="field">
+							<div class="input-group pull-left">
+								<input class=" " id="sortno" name="sortno" type="text" value="{$data.sortno}"/>
+							</div>
+							<span class="helping"></span>
+						</td>
+
+					</tr>
+					<tr>
+						<td  class="title"   nowrap="nowrap">备注
+						</td>
+						<td  class="field" colspan="3">
+							<div class="input-group pull-left">
+								<input class=" " id="remark" name="remark" type="text" value="{$data.remark}"/>
+							</div>
+							<span class="helping"> </span>
+						</td>
+					</tr>
+
+				</table>
+
+
+	<input type="hidden" name="id" value="{$data.id}">
+ 
+
+{/block}
+{block name="footer"}
+
+
+<script type="text/javascript">
+	$('#actcode').blur(function(){
+	 var actcode=$('#actcode').val();
+	    $.ajax({
+			url: "{:url('test')}",
+			data: "actcode=" + actcode,
+			type: "post",
+			success: function(data) {
+				if(data==1){
+					$('#first').css('display','block');
+				}else{
+					$('#first').css('display','none');
+				}
+			}
+		});
+	})
+
+	function submitForm(cb) {
+		if (!$('#form1').valid()) {
+			try {
+				$(".error").eq(0).focus(); //自动定位到第一验证不通过的域  原 focusInvalid: true 在弹窗下不生效（非弹窗测试正常）
+			} catch (e) {
+			}
+			return false;
+		}
+
+
+        var getDisplay = $("#first").css("display");
+        if(getDisplay=='block'){
+        	return false;
+        }
+		
+		var postData = $("#form1").formSerialize();
+		//console.log(postData);return;
+		var id = $("input[name=id]").val();
+		$.ajaxSubmitForm({
+			url: '{:url("update")}?id=' + id,
+			param: postData,
+			success: function(data) {
+				if (cb) {
+					cb(data);
+				}
+
+			}
+		});
+	};
+</script>
+{/block}

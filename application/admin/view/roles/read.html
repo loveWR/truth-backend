@@ -1,0 +1,36 @@
+{extend name="application/common/view/dialog.html" /}
+{block name="title"}{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+	  
+					<table cellspacing="1" width="100%" border="0" align="center" class="form-table" style="table-layout:fixed">
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap">角色名称
+							</td>
+							<td  class="field" width="80%">
+								{$data.rolename}
+							</td>
+
+						</tr>
+						<tr>
+							<td  class="title"  nowrap="nowrap">角色描述
+							</td>
+							<td  class="field" >
+								{$data.roledesc}
+							</td>
+						</tr>
+						<tr>
+
+							<td  class="title"  nowrap="nowrap">排序号
+							</td>
+							<td  class="field" >
+								{$data.sortno}
+							</td>
+						</tr>
+					</table>	
+
+				 
+{/block}

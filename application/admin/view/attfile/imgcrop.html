@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>图片裁剪</title>
+    <!--[if !IE]> -->
+    <script src="__ADMIN__/ACE/components/jquery/dist/jquery.js"></script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script src="__ADMIN__/ACE/components/jquery.1x/dist/jquery.js"></script>
+    <![endif]-->
+     <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="__ADMIN__/js/cropper/cropper.css"/>
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/font-awesome/css/font-awesome.css" />
+    <script src="__ADMIN__/ACE/components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="__ADMIN__/js/cropper/cropper.js"></script>
+    <script src="__ADMIN__/js/cropper/main.js"></script>
+     <script src="__ADMIN__/js/tools.js__JSVER__"></script>
+    <style type="text/css">
+    	.imgcut_wrap label{position: relative;top:7px}
+    	#chooseSize {position: relative;top: 2px;height: 30px;}
+    </style>
+
+</head>
+<body>
+
+    <div id="wrapper">
+        <div id="container">
+            <!--头部，相册选择和格式选择-->
+            <div class="imgcut_wrap">
+                <div class="col-md-12" style="top:0;position:fixed;z-index: 1988;background: #fff;height:43px;width: 100%;margin-bottom: 5px;padding:5px;">
+			<div class="fixed" style="">
+				                  
+                    <div class="pull-left docs-buttons">
+                        <!-- <h3>Toolbar:</h3> -->
+                            <button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title="原图放大0.1倍">
+            <span class="docs-tooltip" data-toggle="tooltip" data-placement="bottom" data-animation="false" title="" data-original-title="原图放大0.1倍">
+              <span class="fa fa-search-plus"></span>
+            </span>
+                            </button>
+                            <button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title="原图缩小0.1倍">
+            <span class="docs-tooltip" data-toggle="tooltip" data-placement="bottom" data-animation="false" title="" data-original-title="原图缩小0.1倍">
+              <span class="fa fa-search-minus"></span>
+            </span>
+                            </button>
+                      
+
+
+             
+                            <button type="button" class="btn btn-primary" data-method="rotate" data-option="-90" title="左旋转90度">
+            <span class="docs-tooltip" data-toggle="tooltip" data-placement="bottom" data-animation="false" title="" data-original-title="左旋转90度">
+              <span class="fa fa-reply"></span>
+            </span>
+                            </button>
+                            <button type="button" class="btn btn-primary" data-method="rotate" data-option="90" title="右旋转90度">
+            <span class="docs-tooltip" data-toggle="tooltip" data-placement="bottom" data-animation="false" title="" data-original-title="右旋转90度">
+              <span class="fa fa-share"></span>
+            </span>
+                            </button>
+                
+      
+                 
+                            <button type="button" class="btn btn-primary" data-method="reset" title="重置">
+            <span class="docs-tooltip" data-toggle="tooltip"  data-placement="bottom" data-animation="false" title="" data-original-title="重置">
+              <span class="fa fa-refresh"></span>
+            </span>
+                            </button>
+               
+              
+                     
+                    </div>
+                             <div class="input pull-left" style="margin:0 10px">
+              	      <div class="pull-left" style="margin:0 5px">
+                    	<label class="pull-left  control-label no-padding-right" for="cropperWidth"> 宽：</label>
+                    	<input type="text" name="cropperWidth" id="cropperWidth" value="{$width}" class="form-control search-query admin_sea text-center" style="width:59px" />
+                    </div>
+                      <div class="pull-left style="margin:0 5px">
+                      	<label class="pull-left control-label no-padding-right" for="cropperHeight"> 高： </label>
+                 <input type="text" name="cropperHeight" id="cropperHeight" value="{$height}" class="form-control search-query admin_sea text-center"  style="width:59px"  />
+                    </div>
+                      <div class="pull-left" style="margin:0 5px">
+                      	<label class="pull-left control-label no-padding-right" for="cropperHeight">旋转度数： </label>
+                 <input type="" name="" id="rotate" value="" class="form-control search-query admin_sea text-center"  style="width:59px"  />
+                    </div>
+              </div>
+              <select id="chooseSize">
+                      <option value="defalt" data-width="200" data-height="150">请选择</option>
+                      {if condition="empty($options)"}
+                      <option value="home" data-width="200" data-height="300">首页幻灯片</option>
+                      <option value="tel"  data-width="300" data-height="400">手机banner</option>
+                      <option value="news"  data-width="400" data-height="420">新闻缩略图</option>
+                      <option value="products"  data-width="800" data-height="900">产品大图</option>
+                      {else/}
+                      {$options}
+                      {/if}
+                      
+          					  
+					    </select>
+
+                      <div class="pull-left docs-buttons">
+ <!-- <h3>Toolbar:</h3> -->
+
+ <div class="btn-group btn-group-crop" class="hidden" style="display: none;">
+  <button id="savepic" class="btn btn-primary" data-method="getCroppedCanvas" data-option="{ "width": 180, "height": 90 }" type="button">
+  上传头像
+  </button>
+ </div>
+
+ </div><!-- /.docs-buttons --> 
+                </div>
+			</div>
+
+     
+                <img id="image" src="{$src}" alt="Picture">
+           
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function submitForm(cb) {
+        	$("#savepic").data({"cb":cb})
+			$("#savepic").click();
+        };
+
+
+    </script>
+
+    
+
+</body>
+</html>

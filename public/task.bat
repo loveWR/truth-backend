@@ -1,0 +1,1 @@
+php -f  C:\ws\TP5MySQL\src\public\index.php admin/task/main 123

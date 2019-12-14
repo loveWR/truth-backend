@@ -1,0 +1,68 @@
+{extend name="application/common/view/form.html" /}
+{block name="title"}{/block}
+{block name="header"}
+ 
+
+{/block}
+{block name="main_content"}
+  
+
+				<table cellspacing="1" width="100%" border="0" align="center" class="form-table">
+					<tr>
+							<td  class="title" width="20%" nowrap="nowrap"><span class="red">*</span>表名
+							</td>
+							<td  class="field">
+								<div class="input-group pull-left">
+   
+			            			<input class="required w400 " readonly="readonly" id="tablename" name="tablename"  type="text" value="{$data.tablename}"/>
+			            		</div>
+			            		 <span class="helping"></span>
+							</td>
+
+						</tr>
+						<tr>
+							<td  class="title" width="20%" nowrap="nowrap"><span class="red">*</span>唯一索引名
+							</td>
+							<td  class="field">
+								<div class="input-group pull-left">
+   
+			            			<input class="required  w400  "  readonly="readonly"  id="uniname" name="uniname"   type="text" value="{$data.uniname}"/>
+			            		</div>
+			            		 <span class="helping"></span>
+							</td>
+
+						</tr>
+						<tr>
+							<td  class="title"   nowrap="nowrap"><span class="red">*</span>提示信息
+							</td>
+							<td  class="field">
+								<div class="input-group pull-left">
+									<textarea class="required  w400 " id="msg" name="msg" placeholder="提示信息" type="text" rows="3" cols="50" />{$data.msg}</textarea>
+								</div>
+								<span class="helping"></span>
+							</td>
+						</tr>
+				</table>
+	    
+	    		<input type="hidden" name="id" value="{$data.id}">
+
+{/block}
+{block name="footer"}
+
+	<script type="text/javascript">
+	    
+	    function submitForm(cb) {
+	        if (!$('#form1').valid()) {
+	            return false;
+	        }
+	        var postData = $("#form1").formSerialize();
+	        $.ajaxSubmitForm({
+	            url: "{:url('update')}",
+	            param: postData,
+	            success: function(data) {
+	                if (cb) {cb(data)}
+	            }
+	        });
+	    };
+	</script>
+{/block}

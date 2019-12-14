@@ -1,0 +1,270 @@
+<?php
+
+use app\common\model\Rbac;
+$rbac=new Rbac;
+$rbac->init_menu();
+$sidebarhtml=$rbac->get_frame_sidebar_html(3);
+?>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>{block name="title"}{/block}</title>
+
+    <meta name="description" content="Xframework" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/font-awesome/css/font-awesome.css" />
+
+    <!-- page specific plugin styles -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/_mod/jquery-ui/jquery-ui.css" />
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+    <link rel="stylesheet" href="__ADMIN__/ACE/components/_mod/jqgrid/ui.jqgrid.css" />
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-fonts.css" />
+
+    <!-- ace styles -->
+    <link rel="stylesheet" href="__ADMIN__/ACE/dist/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-part2.css" class="ace-main-stylesheet" />
+    <![endif]-->
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-skins.css" />
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="__ADMIN__/ACE/assets/css/ace-ie.css" />
+    <![endif]-->
+    <!-- inline styles related to this page -->
+    <!--[if !IE]> -->
+    <script src="__ADMIN__/ACE/components/jquery/dist/jquery.min.js"></script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script src="__ADMIN__/ACE/components/jquery.1x/dist/jquery.min.js"></script>
+    <![endif]-->
+
+    <!-- ace settings handler -->
+    <script src="__ADMIN__/ACE/assets/js/ace-extra.js"></script>
+
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+    <!--[if lte IE 8]>
+    <script src="__ADMIN__/ACE/components/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="__ADMIN__/ACE/components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="__ADMIN__/js/layer/layer.js"></script>
+    <script src="__ADMIN__/js/jquery-validate/jquery.validate.min.js"></script>
+    <script src="__ADMIN__/js/jquery-validate/localization/messages_zh.min.js"></script>
+    <link href="__ADMIN__/js/select2/select2.min.css" rel="stylesheet" />
+    <script src="__ADMIN__/js/select2/select2.min.js"></script>
+    <!-- 自定义页面样式与JS -->
+    <script src="__ADMIN__/js/tools.js"></script>
+    <script src="__ADMIN__/js/frame.js"></script>
+    <script src="__ADMIN__/js/frame-tab.js"></script>
+
+    <link href="__ADMIN__/css/base.css" rel="stylesheet" />
+    <link href="__ADMIN__/css/framework.css" rel="stylesheet" />
+
+
+</head>
+
+<body class="no-skin">
+<!-- #section:basics/navbar.layout -->
+<div id="navbar" class="navbar navbar-default          ace-save-state">
+    <div class="navbar-container ace-save-state" id="navbar-container">
+        <script type="text/javascript">
+            try { ace.settings.loadState('navbar-container') } catch (e) { }
+        </script>
+        <!-- #section:basics/sidebar.mobile.toggle -->
+        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+            <span class="sr-only">Toggle sidebar</span>
+
+            <span class="icon-bar"></span>
+
+            <span class="icon-bar"></span>
+
+            <span class="icon-bar"></span>
+        </button>
+
+        <!-- /section:basics/sidebar.mobile.toggle -->
+        <div class="navbar-header pull-left">
+            <!-- #section:basics/navbar.layout.系统名称起 -->
+            <a href="#" class="navbar-brand">
+                <small>
+                    <i class="fa fa-leaf"></i>
+                    Ace Admin
+                </small>
+            </a>
+
+            <!-- /section:basics/navbar.layout.系统名称止 -->
+            <!-- #section:basics/navbar.toggle -->
+            <!-- /section:basics/navbar.toggle -->
+        </div>
+        
+        <!-- #section:basics/navbar.dropdown -->
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav">
+                <!-- #section:basics/navbar.user_menu -->
+                <li class="light-blue dropdown-modal">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        <img class="nav-user-photo" src="__ADMIN__/img/samples/emma-300.jpg" alt="Jason's Photo"/>
+                        <span class="user-info">
+                                <small>监察科</small>高俊
+                            </span>
+                        <i class="ace-icon fa fa-caret-down"></i>
+                    </a>
+                    <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        <li>
+                            <a href="#">
+                                <i class="ace-icon fa fa-cog"></i>
+                                设置
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                <i class="ace-icon fa fa-user"></i>
+                                简介
+                            </a>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <a href="/Admin/Login/LogOut">
+                                <i class="ace-icon fa fa-power-off"></i>
+                                退出
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- /section:basics/navbar.user_menu -->
+            </ul>
+        </div>
+
+        <!-- /section:basics/navbar.dropdown -->
+    </div><!-- /.navbar-container -->
+</div>
+
+<!-- /section:basics/navbar.layout -->
+<div class="main-container ace-save-state" id="main-container">
+
+    <div id="sidebar" class="sidebar  responsive ace-save-state" data-sidebar="true" data-sidebar-scroll="true" data-sidebar-hover="true">
+            <script type="text/javascript">
+                try { ace.settings.loadState('sidebar');} catch (e) {}
+            </script>
+            <ul class="nav nav-list">
+                {$sidebarhtml}
+            </ul>
+            <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+                <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+            </div>
+    </div>
+    <!-- /section:basics/sidebar end-->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content main_page-content">
+                <!-- #section:settings.box -->
+
+                <!-- /section:settings.box -->
+                <div class="page-header main_page_header">
+                    <div class="content-tabs">
+                        <button class="roll-nav roll-left tabLeft">
+                            <i class="fa fa-backward"></i>
+                        </button>
+                        <nav class="page-tabs menuTabs">
+                            <div class="page-tabs-content" style="margin-left:0" id="tab">
+                                <a href="javascript:;" class="menuTab active" data-id="s0"  data-url="user_list.html">会员列表</a>
+                                <a href="javascript:;" class="menuTab"  data-id="s1"  data-url="dept_tree.html">单位列表</a>
+                            </div>
+                        </nav>
+                        <button class="roll-nav roll-right tabRight">
+                            <i class="fa fa-forward" style="margin-left: 3px;"></i>
+                        </button>
+                        <div class="btn-group roll-nav roll-right">
+                            <button class="dropdown tabClose" data-toggle="dropdown">
+                                页签操作<i class="fa fa-caret-down" style="padding-left: 3px;"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a class="tabReload" href="javascript:void(0);">刷新当前</a>
+                                </li>
+                                <li>
+                                    <a class="tabCloseCurrent" href="javascript:void(0);">关闭当前</a>
+                                </li>
+                                <li>
+                                    <a class="tabCloseAll" href="javascript:void(0);">全部关闭</a>
+                                </li>
+                                <li>
+                                    <a class="tabCloseOther" href="javascript:void(0);">除此之外全部关闭</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="roll-nav roll-right fullscreen">
+                            <i class="fa fa-arrows-alt"></i>
+                        </button>
+                    </div>
+
+                </div><!-- /.page-header -->
+                <div class="mainContent" id="parent">
+                    <iframe class="XframeworkTab_iframe"   width="100%" height="100%" src="/test1.aspx" frameborder="0" data-id="s0"  data-url="user_list.html" seamless=""></iframe>
+                    <iframe class="XframeworkTab_iframe"   width="100%" height="100%" src="dept_tree.html" frameborder="0" data-id="s1"  data-url="user_list.html" seamless="" style="display: none;"></iframe>
+
+                </div>
+            </div>
+
+        </div>
+    </div><!-- /.main-content -->
+
+
+</div><!-- /.main-container -->
+
+<div id="loadingPage" style="display: none;">
+    <div class="loading-shade"></div>
+    <div class="loading-content" onclick="$.loading(false)">数据加载中，请稍后…</div>
+</div>
+
+<!-- basic scripts -->
+
+<script type="text/javascript">
+    if('ontouchstart' in document.documentElement) document.write("<script src='__ADMIN__/ACE/components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
+</script>
+<script src="__ADMIN__/ACE/components/bootstrap/dist/js/bootstrap.js"></script>
+
+<!-- page specific plugin scripts -->
+<script src="__ADMIN__/ACE/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+<script src="__ADMIN__/ACE/components/jqGrid/js/jquery.jqGrid.min.js"></script>
+<script src="__ADMIN__/ACE/components/jqGrid/js/i18n/grid.locale-cn.js"></script>
+
+<!-- ace scripts -->
+<script src="__ADMIN__/ACE/assets/js/src/elements.scroller.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.colorpicker.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.fileinput.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.typeahead.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.wysiwyg.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.spinner.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.treeview.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.wizard.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/elements.aside.js"></script>
+<script src="__ADMIN__/ACE/dist/js/ace.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.basics.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.scrolltop.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.ajax-content.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.touch-drag.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.sidebar.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.sidebar-scroll-1.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.submenu-hover.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.widget-box.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.settings.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.settings-rtl.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.settings-skin.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.widget-on-reload.js"></script>
+<script src="__ADMIN__/ACE/assets/js/src/ace.searchbox-autocomplete.js"></script>
+<script>
+
+</script>
+</body>
+</html>

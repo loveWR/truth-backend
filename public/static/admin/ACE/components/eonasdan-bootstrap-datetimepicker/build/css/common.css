@@ -1,0 +1,29 @@
+.rc-calendar-time-input {
+    height: 25px;
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    padding: 4px 25px;
+    border-radius: 6px 6px;
+    border: 1px solid #d9d9d9;
+    background-color: #fff;
+    color: #666;
+    line-height: 1.5;
+    -webkit-transform: border .3s cubic-bezier(.35,0,.25,1),background .3s cubic-bezier(.35,0,.25,1),box-shadow .3s cubic-bezier(.35,0,.25,1);
+    transform: border .3s cubic-bezier(.35,0,.25,1),background .3s cubic-bezier(.35,0,.25,1),box-shadow .3s cubic-bezier(.35,0,.25,1);
+    width: 68px;
+}
+.rc-calendar-ok-btn, .rc-calendar-today-btn,.rc-calendar-reset-btn,.rc-calendar-clear-btn,.rc-calendar-now-btn {
+    display: inline-block;
+    padding: 4px;
+    text-align: center;
+    color: #f46830;
+	padding:6px 22px;
+}
+.rc-calendar-footer {margin-top:10px;}
+.glyphicon-time {display:none;}
+.rc-calendar-footer-btn {padding-left:6px}
+.rc-calendar-footer-btn a,.rc-calendar-footer-btn a[data-action]{padding:6px 10px}
+.rc-calendar-zero-btn {color:#f46830;}
+.timepicker h4 {text-align:center;border-bottom:1px solid #000;border-top:1px solid #cdcdcd;padding:8px 0;}
+
